@@ -13,21 +13,26 @@ public class calculadora extends Stage {
 
     private Button[] arrbtns = new Button[16];
     private TextField txtpantalla;
-    private GridPane teclado;
+    private GridPane gpdteclado;
     private VBox vBox;
     private Scene escena;
 
     private void CrearUI(){
         arrbtns = new Button[16];
         txtpantalla = new TextField("0");
-        teclado = new GridPane();
-        vBox = new VBox();
-        escena = new Scene();
+        gpdteclado = new GridPane();
+        vBox = new VBox(txtpantalla, gpdteclado);
+        escena = new Scene(vBox, 200, 200);
     }
 
-    public Calculadora() {
+    private void CrearTeclado(){
+        gpdteclado.set
+    }
+
+    public calculadora() {
+        CrearUI();
         this.setTitle("Calculadora jitomatera");
-        this.setScene();
+        this.setScene(escena);
         this.show();
     }
 }
