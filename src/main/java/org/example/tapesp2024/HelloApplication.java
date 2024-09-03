@@ -46,6 +46,7 @@ public class HelloApplication extends Application {
         // FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         CrearUI();
         Scene scene = new Scene(border_principal, 320, 240);
+        scene.getStylesheets().add(getClass().getResource("/estilos/main.css").toExternalForm());
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.setMaximized(true);
