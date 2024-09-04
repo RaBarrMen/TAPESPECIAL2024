@@ -1,0 +1,18 @@
+.root{
+    -fx-padding: 6 6 6 6;
+}
+
+.button{
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+    -fx-border-color: black;
+    -fx-spacing: 20%;
+}
+#font-button{
+    -fx-spacing: 20;
+    -fx-pref-width: 200px;
+    -fx-font: bold italic 11pt "Arial";
+    -fx-effect: dropshadow(one-pass-box, black, 8, 0.0, 2, 0);
+}

@@ -1,4 +1,12 @@
 .root{
-    /*-fx-background-color: #FF0000;*/
-    -fx-background-image: /*url(https://wallpapers-clan.com/wp-content/uploads/2024/01/aesthetic-spider-man-in-flight-desktop-wallpaper-preview.jpg)*/ url("../images/wallpaper.jpg");
+    -fx-background-image: url("../images/wallpaper.jpg"), url("https://openseauserdata.com/files/ac0fcf64393cd4b76061bab2bb9f75d3.gif");
+    -fx-background-size: 100%, 400px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center, bottom right;
+}
+
+.menu-bar{
+    -fx-background-color: blue;
+    -fx-border-color: yellow;
+    -fx-border-width: 2px;
 }

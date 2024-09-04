@@ -8,11 +8,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
-
 public class calculadora extends Stage {
 
     private Button[][] arrbtns;
+    private Button btnclear;
     private TextField txtpantalla;
     private GridPane gpdteclado;
     private VBox vBox;
@@ -26,8 +25,11 @@ public class calculadora extends Stage {
         txtpantalla.setEditable(false);
         gpdteclado = new GridPane();
         CrearTeclado();
-        vBox = new VBox(txtpantalla, gpdteclado);
-        escena = new Scene(vBox, 200, 200);
+        btnclear = new Button("CE");
+        btnclear.setId("font-button");
+        vBox = new VBox(txtpantalla,  btnclear, gpdteclado);
+        escena = new Scene(vBox, 250, 280);
+        escena.getStylesheets().add(getClass().getResource("/estilos/calc.css").toExternalForm());
     }
 
     private void CrearTeclado(){
