@@ -1,0 +1,6 @@
+.root{
+    -fx-background-image: url("https://img.freepik.com/vector-gratis/fondo-mexicano-plano-cinco-mayo_23-2148898656.jpg"), url("https://openseauserdata.com/files/ac0fcf64393cd4b76061bab2bb9f75d3.gif");
+    -fx-background-size: 100%, 400px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center, bottom right;
+}

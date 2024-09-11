@@ -6,4 +6,6 @@ module org.example.tapesp2024 {
 
     opens org.example.tapesp2024 to javafx.fxml;
     exports org.example.tapesp2024;
+
+    requires org.kordamp.bootstrapfx.core;
 }

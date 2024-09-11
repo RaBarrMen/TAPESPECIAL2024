@@ -11,6 +11,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.tapesp2024.vistas.calculadora;
+import org.example.tapesp2024.vistas.loteria;
+import org.example.tapesp2024.vistas.calc_dana;
 
 import java.io.IOException;
 
@@ -28,14 +30,17 @@ public class HelloApplication extends Application {
     private BorderPane border_principal;
     private MenuBar menu_bar_principal;
     private Menu menu_competencia1, menu_competencia2, salida;
-    private MenuItem menu_item_calculadora;
+    private MenuItem menu_item_calculadora, menu_item_loteria;
 
     public void CrearUI(){
         menu_item_calculadora = new MenuItem("Calculadora");
         menu_item_calculadora.setOnAction(actionEvent -> new calculadora());
 
+        menu_item_loteria = new MenuItem("Loteria");
+        menu_item_loteria.setOnAction(actionEvent -> new loteria());
+
         menu_competencia1 = new Menu("Competencia 1");
-        menu_competencia1.getItems().addAll(menu_item_calculadora);
+        menu_competencia1.getItems().addAll(menu_item_calculadora, menu_item_loteria);
 
         menu_bar_principal = new MenuBar(menu_competencia1);
         border_principal = new BorderPane();
