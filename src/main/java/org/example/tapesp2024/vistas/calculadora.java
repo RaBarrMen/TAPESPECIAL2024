@@ -17,8 +17,6 @@ public class calculadora extends Stage {
     private VBox vBox;
     private Scene escena;
     private String[] strteclas = {"7", "8", "9", "*", "4", "5", "6", "/", "1", "2", "3", "+", "0", ".", "=", "-" };
-
-    // Variables para el manejo de operaciones y estado
     private String primerNumero = "";
     private String operadorActual = "";
     private boolean nuevoNumero = false;
@@ -33,7 +31,7 @@ public class calculadora extends Stage {
         CrearTeclado();
         btnclear = new Button("CE");
         btnclear.setId("font-button");
-        btnclear.setOnAction(e -> limpiarPantalla()); // Asigna el boton de limpiar pantalla
+        btnclear.setOnAction(e -> limpiarPantalla());
         vBox = new VBox(txtpantalla, btnclear, gpdteclado);
         escena = new Scene(vBox, 215, 270);
         escena.getStylesheets().add(getClass().getResource("/estilos/calc.css").toExternalForm());
@@ -59,17 +57,23 @@ public class calculadora extends Stage {
         this.show();
     }
 
-    // Metodo que detecta las teclas presionadas
     private void detectar_tecla(String tecla) {
         if (esOperador(tecla)) {
+            // Permitir iniciar con número negativo
+            if (tecla.equals("-") && txtpantalla.getText().isEmpty()) {
+                txtpantalla.appendText(tecla);  // Permitir ingresar "-" al principio
+                nuevoNumero = false;  // Indicar que se está ingresando un número
+                return;
+            }
+
             // Si es un operador, y no se ha seleccionado otro antes, permite operacion
             if (!operadorSeleccionado) {
                 if (!primerNumero.isEmpty()) {
-                    calcular_resultado(); // Calcula si ya se tiene un numero
+                    calcular_resultado();
                 }
                 operadorActual = tecla;
                 primerNumero = txtpantalla.getText();
-                nuevoNumero = true;  // Marca para ingresar nuevo numero
+                nuevoNumero = true;
                 operadorSeleccionado = true;  // Marca que ya hay un operador seleccionado
             } else {
                 // Actualiza el operador si se presiona mas de una vez sin calcular
@@ -125,12 +129,17 @@ public class calculadora extends Stage {
             case "*":
                 return a * b;
             case "/":
-                if (b == 0) throw new ArithmeticException("Division por cero");
+                if (b == 0) {
+                    txtpantalla.setText("Error: Div por 0");
+                    return 0;
+                }
                 return a / b;
             default:
-                throw new IllegalArgumentException("Operador no válido");
+                txtpantalla.setText("Operador no válido");
+                return 0;
         }
     }
+
 
     private boolean esOperador(String tecla) {
         return tecla.equals("+") || tecla.equals("-") || tecla.equals("*") || tecla.equals("/");
