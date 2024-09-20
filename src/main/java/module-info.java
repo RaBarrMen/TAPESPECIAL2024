@@ -8,4 +8,5 @@ module org.example.tapesp2024 {
     exports org.example.tapesp2024;
 
     requires org.kordamp.bootstrapfx.core;
+    requires java.sql;
 }

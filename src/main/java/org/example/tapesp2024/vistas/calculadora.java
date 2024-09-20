@@ -131,7 +131,7 @@ public class calculadora extends Stage {
             case "/":
                 if (b == 0) {
                     txtpantalla.setText("Error: Div por 0");
-                    return 0;
+                    return Integer.parseInt("");
                 }
                 return a / b;
             default:
