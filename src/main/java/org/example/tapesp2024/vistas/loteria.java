@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.io.File;
+import java.net.URL;
 
 public class loteria extends Stage {
     private HBox hbox_main, hbox_buttons;
@@ -30,7 +32,7 @@ public class loteria extends Stage {
     private GridPane gdp_tablilla;
     private ImageView imagen_mazo;
     private Scene escena;
-    private String[] arreglo_imagenes = {"barril.jpeg", "botella.jpeg", "catrin.jpeg", "chavorruco.jpeg", "concha.jpeg", "luchador.jpeg", "maceta.jpeg", "rosa.jpeg", "tacos.jpeg", "venado.jpeg", "guajolota.jpg", "mirrey.jpg", "pendejo.png"};
+    private String[] arreglo_imagenes = {"", "barril.jpeg", "botella.jpeg", "catrin.jpeg", "chavorruco.jpeg", "concha.jpeg", "luchador.jpeg", "maceta.jpeg", "rosa.jpeg", "tacos.jpeg", "venado.jpeg", "guajolota.jpg", "mirrey.jpg", "pendejo.png", "twitter.jpg", "feminista.jpg", "uber.jpg"};
     private Button[][] arreglo_botones_tablilla;
     private Panel panel_principal;
 
@@ -113,6 +115,16 @@ public class loteria extends Stage {
             timeline.stop();  // Detener el timeline si ya estaba corriendo
         }
 
+        // Reiniciar el índice de la imagen y puntos
+        currentImageIndex = 0;
+        puntos = 0;
+        txt_puntos.setText("0");
+
+        // Deshabilitar los botones para cambiar la tablilla
+        btn_anterior.setDisable(true);
+        btn_siguiente.setDisable(true);
+        btn_iniciar.setDisable(true);  // Deshabilitar botón de iniciar
+
         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(1), event -> {
                     tiempoRestante--;
@@ -129,65 +141,108 @@ public class loteria extends Stage {
         timeline.play();
     }
 
+
+
     private void cambiarImagenMazo() {
-        //nuevo
         if (currentImageIndex >= arreglo_imagenes.length - 1) {
             timeline.stop();  // Detener el juego
-            btn_iniciar.setDisable(false);  // Habilitar el botón para reiniciar
+            verificarResultado();  // Verificar si se ha ganado o perdido
             return;  // No continuar si ya mostramos todas las cartas
         }
 
-        currentImageIndex = (currentImageIndex + 1) % arreglo_imagenes.length;
+        // Cambiar la imagen del mazo
+        currentImageIndex = (currentImageIndex + 1) % arreglo_imagenes.length ;
         imagen_mazo.setImage(new Image(getClass().getResource("/images/" + arreglo_imagenes[currentImageIndex]).toString()));
     }
+
+    private void verificarResultado() {
+        boolean todasCasillasMarcadas = true;
+
+        // Verificar si todas las casillas están deshabilitadas
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (!arreglo_botones_tablilla[i][j].isDisabled()) {
+                    todasCasillasMarcadas = false;
+                    break;
+                }
+            }
+        }
+
+        if (todasCasillasMarcadas) {
+            // Mostrar mensaje de victoria
+            System.out.println("¡Has ganado!");
+        } else {
+            // Mostrar mensaje de derrota
+            System.out.println("Has perdido. No seleccionaste todas las casillas a tiempo.");
+        }
+    }
+
 
     private void CrearTablilla() {
         arreglo_botones_tablilla = new Button[4][4];
 
-        // Crear una lista para las imágenes disponibles y duplicar las imágenes si son menos de 16
-        List<String> imagenesDisponibles = new ArrayList<>(Arrays.asList(arreglo_imagenes));
-        while (imagenesDisponibles.size() < 16) {
-            imagenesDisponibles.addAll(Arrays.asList(arreglo_imagenes));  // Duplicar imágenes si no hay suficientes
+        // Crear una lista con las imágenes disponibles, excluyendo las vacías
+        List<String> imagenesDisponibles = new ArrayList<>();
+        for (String imagen : arreglo_imagenes) {
+            if (!imagen.isEmpty()) {
+                // Verificar si el archivo de la imagen existe
+                URL imagenURL = getClass().getResource("/images/" + imagen);
+                if (imagenURL != null) {
+                    imagenesDisponibles.add(imagen);
+                }
+            }
         }
 
         // Mezclar las imágenes aleatoriamente
         Collections.shuffle(imagenesDisponibles);
 
+        // Limitar la lista a 16 imágenes, o menos si no hay suficientes
+        List<String> imagenesSeleccionadas = imagenesDisponibles.size() >= 16
+                ? imagenesDisponibles.subList(0, 16)
+                : imagenesDisponibles;
+
         int imgIndex = 0;  // Índice para recorrer la lista de imágenes
 
-        // nuevo
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                Image img = new Image(getClass().getResource("/images/" + imagenesDisponibles.get(imgIndex)).toString());
-                ImageView iv = new ImageView(img);
-                iv.setFitWidth(70);
-                iv.setFitHeight(120);
+                if (imgIndex < imagenesSeleccionadas.size()) {
+                    String nombreImagen = imagenesSeleccionadas.get(imgIndex);
+                    Image img = new Image(getClass().getResource("/images/" + nombreImagen).toString());
+                    ImageView iv = new ImageView(img);
+                    iv.setFitWidth(70);
+                    iv.setFitHeight(120);
 
-                arreglo_botones_tablilla[j][i] = new Button();
-                arreglo_botones_tablilla[j][i].setGraphic(iv);
+                    arreglo_botones_tablilla[j][i] = new Button();
+                    arreglo_botones_tablilla[j][i].setGraphic(iv);
 
-                // Guardar la imagen en la propiedad del botón para compararla después
-                String nombreImagen = imagenesDisponibles.get(imgIndex);
-                arreglo_botones_tablilla[j][i].setUserData(nombreImagen);
+                    // Guardar la imagen en la propiedad del botón para compararla después
+                    arreglo_botones_tablilla[j][i].setUserData(nombreImagen);
 
-                // Añadir evento para cuando se hace clic en la carta
-                arreglo_botones_tablilla[j][i].setOnAction(e -> {
-                    Button botonSeleccionado = (Button) e.getSource();
-                    String imagenBoton = (String) botonSeleccionado.getUserData();
+                    // Añadir evento para cuando se hace clic en la carta
+                    arreglo_botones_tablilla[j][i].setOnAction(e -> {
+                        Button botonSeleccionado = (Button) e.getSource();
+                        String imagenBoton = (String) botonSeleccionado.getUserData();
 
-                    // Verificar si coincide con la imagen actual del mazo
-                    if (imagenBoton.equals(arreglo_imagenes[currentImageIndex])) {
-                        puntos++;
-                        txt_puntos.setText(String.valueOf(puntos));
-                    }
-                });
+                        // Verificar si coincide con la imagen actual del mazo
+                        if (imagenBoton.equals(arreglo_imagenes[currentImageIndex])) {
+                            puntos++;
+                            txt_puntos.setText(String.valueOf(puntos));
+                            botonSeleccionado.setDisable(true); // Deshabilitar el botón si es la imagen correcta
+                        }
+                    });
 
-                gdp_tablilla.add(arreglo_botones_tablilla[j][i], j, i);
-                imgIndex++;
+                    gdp_tablilla.add(arreglo_botones_tablilla[j][i], j, i);
+                    imgIndex++;
+                } else {
+                    // Si no hay más imágenes, crear botones vacíos o deshabilitados
+                    arreglo_botones_tablilla[j][i] = new Button("Vacío");
+                    arreglo_botones_tablilla[j][i].setDisable(true);  // Deshabilitar el botón
+                    gdp_tablilla.add(arreglo_botones_tablilla[j][i], j, i);
+                }
             }
         }
-
     }
+
 
 }
 

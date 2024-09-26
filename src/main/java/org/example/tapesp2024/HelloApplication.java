@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.tapesp2024.models.Conexion;
 import org.example.tapesp2024.vistas.calculadora;
 import org.example.tapesp2024.vistas.loteria;
 import org.example.tapesp2024.vistas.calc_dana;
@@ -56,6 +57,7 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
+        Conexion.crearConnection();
     }
 
     public static void main(String... args) {
