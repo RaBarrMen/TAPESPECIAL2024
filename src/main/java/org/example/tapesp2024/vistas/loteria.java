@@ -2,6 +2,7 @@ package org.example.tapesp2024.vistas;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -18,7 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.io.File;
@@ -115,6 +115,18 @@ public class loteria extends Stage {
             timeline.stop();  // Detener el timeline si ya estaba corriendo
         }
 
+        // Filtrar las imágenes vacías (o nulas) del arreglo
+        List<String> listaImagenes = new ArrayList<>();
+        for (String imagen : arreglo_imagenes) {
+            if (imagen != null && !imagen.trim().isEmpty()) {
+                listaImagenes.add(imagen);  // Solo agregar imágenes que no estén vacías
+            }
+        }
+
+        // Mezclar el mazo de cartas de forma aleatoria
+        Collections.shuffle(listaImagenes);  // Barajar las imágenes aleatoriamente
+        arreglo_imagenes = listaImagenes.toArray(new String[0]);  // Volver a convertir la lista a un arreglo
+
         // Reiniciar el índice de la imagen y puntos
         currentImageIndex = 0;
         puntos = 0;
@@ -125,6 +137,7 @@ public class loteria extends Stage {
         btn_siguiente.setDisable(true);
         btn_iniciar.setDisable(true);  // Deshabilitar botón de iniciar
 
+        // Configurar el timeline para cambiar las imágenes en el mazo
         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(1), event -> {
                     tiempoRestante--;
@@ -140,8 +153,6 @@ public class loteria extends Stage {
         timeline.setCycleCount(Timeline.INDEFINITE);  // Hacer que se repita indefinidamente
         timeline.play();
     }
-
-
 
     private void cambiarImagenMazo() {
         if (currentImageIndex >= arreglo_imagenes.length - 1) {
@@ -168,13 +179,24 @@ public class loteria extends Stage {
             }
         }
 
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         if (todasCasillasMarcadas) {
             // Mostrar mensaje de victoria
-            System.out.println("¡Has ganado!");
+            alert.setTitle("¡Victoria!");
+            alert.setHeaderText("¡Loteria!");
+            alert.setContentText("Has seleccionado todas las cartas correctamente. ¡Has ganado!");
         } else {
             // Mostrar mensaje de derrota
-            System.out.println("Has perdido. No seleccionaste todas las casillas a tiempo.");
+            alert.setTitle("Derrota");
+            alert.setHeaderText("Pipipi");
+            alert.setContentText("No lograste seleccionar todas las cartas a tiempo. ¡Has perdido!");
         }
+        alert.show();  // Mostrar la alerta y esperar a que el usuario la cierre
+
+        // Habilitar los botones de navegación para empezar de nuevo
+        btn_anterior.setDisable(false);
+        btn_siguiente.setDisable(false);
+        btn_iniciar.setDisable(false);
     }
 
 

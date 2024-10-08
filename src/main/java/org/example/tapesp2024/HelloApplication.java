@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.tapesp2024.models.Conexion;
+import org.example.tapesp2024.vistas.ListaClientes;
 import org.example.tapesp2024.vistas.calculadora;
 import org.example.tapesp2024.vistas.loteria;
 import org.example.tapesp2024.vistas.calc_dana;
@@ -31,7 +32,7 @@ public class HelloApplication extends Application {
     private BorderPane border_principal;
     private MenuBar menu_bar_principal;
     private Menu menu_competencia1, menu_competencia2, salida;
-    private MenuItem menu_item_calculadora, menu_item_loteria;
+    private MenuItem menu_item_calculadora, menu_item_loteria, menu_item_spotify;
 
     public void CrearUI(){
         menu_item_calculadora = new MenuItem("Calculadora");
@@ -40,10 +41,18 @@ public class HelloApplication extends Application {
         menu_item_loteria = new MenuItem("Loteria");
         menu_item_loteria.setOnAction(actionEvent -> new loteria());
 
+        menu_item_spotify = new MenuItem("Spotify");
+        menu_item_spotify.setOnAction(actionEvent -> new ListaClientes());
+
+
         menu_competencia1 = new Menu("Competencia 1");
         menu_competencia1.getItems().addAll(menu_item_calculadora, menu_item_loteria);
 
-        menu_bar_principal = new MenuBar(menu_competencia1);
+        menu_competencia2 = new Menu("Competencia 2");
+        menu_competencia2.getItems().addAll(menu_item_spotify);
+
+
+        menu_bar_principal = new MenuBar(menu_competencia1, menu_competencia2);
         border_principal = new BorderPane();
         border_principal.setTop(menu_bar_principal);
     }
