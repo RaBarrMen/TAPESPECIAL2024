@@ -4,30 +4,29 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.tapesp2024.models.ClienteDAO;
 
-public class FormularioCliente extends Stage {
+public class RegistroCliente extends Stage {
     private TextField cliente;
     private TextField telefono;
-    private TextField email;
-    private Button tbn_guardar;
+    private TextField contrasenia;
+    private TextField usuario;
+    private Button tbn_guardar, btn_salir;
     private VBox vbox;
     private ClienteDAO clienteDAO;
-    private TableView<ClienteDAO> tableView_cliente;
-
     private Scene escena;
-    public FormularioCliente(TableView<ClienteDAO> tableView, ClienteDAO objeto_cliente) {
-        this.tableView_cliente = tableView;
+
+    public RegistroCliente() {
         CrearIU();
-        if (objeto_cliente != null) {
-            this.clienteDAO =  objeto_cliente;
+        if (clienteDAO != null) {
+            this.clienteDAO =  clienteDAO;
             cliente.setText(clienteDAO.getCliente());
             telefono.setText(clienteDAO.getTelefono());
-            email.setText(clienteDAO.getUsuario());
+            usuario.setText(clienteDAO.getUsuario());
+            contrasenia.setText(clienteDAO.getContrasenia());
             this.setTitle("Editar Cliente");
         }else{
             this.clienteDAO = new ClienteDAO();
@@ -43,35 +42,59 @@ public class FormularioCliente extends Stage {
         cliente.setPromptText("Cliente");
         telefono = new TextField();
         telefono.setPromptText("Telefono");
-        email = new TextField();
-        email.setPromptText("Email");
+        usuario = new TextField();
+        usuario.setPromptText("Usuario");
+        contrasenia = new TextField();
+        contrasenia.setPromptText("Contraseña");
         tbn_guardar = new Button("Guardar");
         tbn_guardar.setOnAction(actionEvent -> GuardarCliente());
-        vbox = new VBox(cliente, telefono, email, tbn_guardar);
+        btn_salir = new Button("Salir");
+        btn_salir.setOnAction(actionEvent -> salirLogin());
+        vbox = new VBox(cliente, telefono, usuario, contrasenia, tbn_guardar, btn_salir);
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(10);
-        escena = new Scene(vbox, 150, 150);
+        escena = new Scene(vbox, 150, 220);
+    }
+
+    private void salirLogin() {
+        login_spotify login = new login_spotify();
+        login.show();
+        this.close();
     }
 
     private void GuardarCliente() {
+        // Verificar si todos los campos están vacíos
+        if (cliente.getText().isEmpty() && usuario.getText().isEmpty() &&
+                telefono.getText().isEmpty() && contrasenia.getText().isEmpty()) {
+
+            // Mostrar alerta de error
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Error");
+            alerta.setContentText("No se puede guardar el usuario porque no se han ingresado datos.");
+            alerta.showAndWait();
+
+            return;  // Salir del método si no hay datos que guardar
+        }
+
         // Asignar los valores ingresados en los campos de texto al clienteDAO
         clienteDAO.setCliente(cliente.getText());
-        clienteDAO.setUsuario(email.getText());
+        clienteDAO.setUsuario(usuario.getText());
         clienteDAO.setTelefono(telefono.getText());
+        clienteDAO.setContrasenia(contrasenia.getText());
 
         String mensaje;
         Alert.AlertType type;
 
         if (clienteDAO.getId_cliente() > 0) {  // Si el cliente ya tiene un ID, se hace el update
             clienteDAO.UPDATE();  // Asume que UPDATE ya realiza la actualización
-            mensaje = "Cliente actualizado exitosamente";
+            mensaje = "Usuario actualizado exitosamente";
             type = Alert.AlertType.INFORMATION;
         } else {  // Si no tiene ID, se realiza un insert
             if (clienteDAO.INSERT() > 0) {
-                mensaje = "Cliente guardado exitosamente";
+                mensaje = "Usuario guardado exitosamente";
                 type = Alert.AlertType.INFORMATION;
             } else {
-                mensaje = "Cliente no guardado";
+                mensaje = "Usuario no guardado";
                 type = Alert.AlertType.ERROR;
             }
         }
@@ -82,15 +105,7 @@ public class FormularioCliente extends Stage {
         alerta.setContentText(mensaje);
         alerta.showAndWait();
 
-        // Actualizar la tabla y refrescar después de guardar o actualizar
-        tableView_cliente.setItems(clienteDAO.SELECTALL());
-        tableView_cliente.refresh();
-
         // Cerrar la ventana
         this.close();
     }
-
-
-
-
 }

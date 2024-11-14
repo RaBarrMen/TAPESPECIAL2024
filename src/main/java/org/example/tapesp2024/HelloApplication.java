@@ -10,11 +10,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.tapesp2024.components.CorredorThread;
 import org.example.tapesp2024.models.Conexion;
-import org.example.tapesp2024.vistas.ListaClientes;
-import org.example.tapesp2024.vistas.calculadora;
-import org.example.tapesp2024.vistas.loteria;
-import org.example.tapesp2024.vistas.calc_dana;
+import org.example.tapesp2024.vistas.*;
 
 import java.io.IOException;
 
@@ -32,7 +30,7 @@ public class HelloApplication extends Application {
     private BorderPane border_principal;
     private MenuBar menu_bar_principal;
     private Menu menu_competencia1, menu_competencia2, salida;
-    private MenuItem menu_item_calculadora, menu_item_loteria, menu_item_spotify;
+    private MenuItem menu_item_calculadora, menu_item_loteria, menu_item_spotify, menu_item_buscaminas, menu_item_corredor;
 
     public void CrearUI(){
         menu_item_calculadora = new MenuItem("Calculadora");
@@ -42,14 +40,21 @@ public class HelloApplication extends Application {
         menu_item_loteria.setOnAction(actionEvent -> new loteria());
 
         menu_item_spotify = new MenuItem("Spotify");
-        menu_item_spotify.setOnAction(actionEvent -> new ListaClientes());
+        menu_item_spotify.setOnAction(actionEvent -> new login_spotify());
+
+        menu_item_buscaminas = new MenuItem("Buscaminas");
+        menu_item_buscaminas.setOnAction(actionEvent -> new PantallaBuscaminas());
+
+        menu_item_corredor = new MenuItem("Pista");
+        menu_item_corredor.setOnAction(actionEvent -> new Pista());
+
 
 
         menu_competencia1 = new Menu("Competencia 1");
         menu_competencia1.getItems().addAll(menu_item_calculadora, menu_item_loteria);
 
         menu_competencia2 = new Menu("Competencia 2");
-        menu_competencia2.getItems().addAll(menu_item_spotify);
+        menu_competencia2.getItems().addAll(menu_item_spotify, menu_item_buscaminas, menu_item_corredor);
 
 
         menu_bar_principal = new MenuBar(menu_competencia1, menu_competencia2);

@@ -10,7 +10,7 @@ import javafx.util.Callback;
 import org.example.tapesp2024.components.Button_Cell;
 import org.example.tapesp2024.models.ClienteDAO;
 
-public class ListaClientes extends Stage {
+public class PantallaCancion extends Stage {
 
     private TableView<ClienteDAO> tableViewClientes;
     private Button btn_agregar;
@@ -18,7 +18,7 @@ public class ListaClientes extends Stage {
     private VBox vbox;
     private Scene escena;
 
-    public ListaClientes() {
+    public PantallaCancion() {
         CrearUI();
         this.setTitle("Lista de Clientes");
         this.setScene(escena);
@@ -51,6 +51,7 @@ public class ListaClientes extends Stage {
     private void CrearTabla() {
         ClienteDAO clienteDAO = new ClienteDAO();
         tableViewClientes = new TableView<ClienteDAO>();
+
         TableColumn<ClienteDAO, String> table_column_nombre = new TableColumn<>("Cliente");
         table_column_nombre.setCellValueFactory(new PropertyValueFactory<>("cliente"));
 
@@ -82,3 +83,4 @@ public class ListaClientes extends Stage {
         tableViewClientes.setItems(clienteDAO.SELECTALL());
     }
 }
+

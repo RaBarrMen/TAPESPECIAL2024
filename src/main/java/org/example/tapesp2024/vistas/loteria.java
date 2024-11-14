@@ -35,11 +35,14 @@ public class loteria extends Stage {
     private String[] arreglo_imagenes = {"", "barril.jpeg", "botella.jpeg", "catrin.jpeg", "chavorruco.jpeg", "concha.jpeg", "luchador.jpeg", "maceta.jpeg", "rosa.jpeg", "tacos.jpeg", "venado.jpeg", "guajolota.jpg", "mirrey.jpg", "pendejo.png", "twitter.jpg", "feminista.jpg", "uber.jpg"};
     private Button[][] arreglo_botones_tablilla;
     private Panel panel_principal;
+    private boolean tableroCreado = false;  // Bandera para controlar si el tablero ya fue creado
+
 
     private Timeline timeline;
     private int currentImageIndex = 0;
     private int tiempoRestante = 3; // Tiempo en segundos para cambiar la carta
     private TextField txt_tiempoRestante;
+    private int partidasJugadas = 0;  // Variable para contar el número de partidas jugadas
 
     // nuevo
     private TextField txt_puntos;
@@ -132,7 +135,16 @@ public class loteria extends Stage {
         puntos = 0;
         txt_puntos.setText("0");
 
-        // Deshabilitar los botones para cambiar la tablilla
+        // Solo reiniciar la tablilla después de la segunda partida
+        if (partidasJugadas >= 1) {
+            gdp_tablilla.getChildren().clear();  // Limpiar la tablilla actual
+            CrearTablilla();  // Crear una nueva tablilla
+        }
+
+        // Reiniciar la imagen del mazo a "dorso"
+        imagen_mazo.setImage(new Image(getClass().getResource("/images/dorso.jpeg").toString()));
+
+        // Deshabilitar los botones para cambiar la tablilla y el botón de iniciar
         btn_anterior.setDisable(true);
         btn_siguiente.setDisable(true);
         btn_iniciar.setDisable(true);  // Deshabilitar botón de iniciar
@@ -152,18 +164,22 @@ public class loteria extends Stage {
         );
         timeline.setCycleCount(Timeline.INDEFINITE);  // Hacer que se repita indefinidamente
         timeline.play();
+
+        // Incrementar el número de partidas jugadas
+        partidasJugadas++;
     }
 
     private void cambiarImagenMazo() {
-        if (currentImageIndex >= arreglo_imagenes.length - 1) {
-            timeline.stop();  // Detener el juego
+        if (currentImageIndex >= arreglo_imagenes.length) {
+            timeline.stop();  // Detener el juego después de mostrar todas las imágenes
             verificarResultado();  // Verificar si se ha ganado o perdido
-            return;  // No continuar si ya mostramos todas las cartas
+            return;
         }
 
         // Cambiar la imagen del mazo
-        currentImageIndex = (currentImageIndex + 1) % arreglo_imagenes.length ;
         imagen_mazo.setImage(new Image(getClass().getResource("/images/" + arreglo_imagenes[currentImageIndex]).toString()));
+
+        currentImageIndex++; // Incrementar el índice para la próxima imagen
     }
 
     private void verificarResultado() {
@@ -183,7 +199,7 @@ public class loteria extends Stage {
         if (todasCasillasMarcadas) {
             // Mostrar mensaje de victoria
             alert.setTitle("¡Victoria!");
-            alert.setHeaderText("¡Loteria!");
+            alert.setHeaderText("¡Lotería!");
             alert.setContentText("Has seleccionado todas las cartas correctamente. ¡Has ganado!");
         } else {
             // Mostrar mensaje de derrota
@@ -193,14 +209,16 @@ public class loteria extends Stage {
         }
         alert.show();  // Mostrar la alerta y esperar a que el usuario la cierre
 
-        // Habilitar los botones de navegación para empezar de nuevo
-        btn_anterior.setDisable(false);
-        btn_siguiente.setDisable(false);
+        // Habilitar los botones de navegación y de iniciar para empezar de nuevo
+        btn_anterior.setDisable(true);
+        btn_siguiente.setDisable(true);
         btn_iniciar.setDisable(false);
     }
 
-
     private void CrearTablilla() {
+        // Limpiar el contenido anterior del GridPane
+        gdp_tablilla.getChildren().clear();
+
         arreglo_botones_tablilla = new Button[4][4];
 
         // Crear una lista con las imágenes disponibles, excluyendo las vacías
@@ -246,7 +264,7 @@ public class loteria extends Stage {
                         String imagenBoton = (String) botonSeleccionado.getUserData();
 
                         // Verificar si coincide con la imagen actual del mazo
-                        if (imagenBoton.equals(arreglo_imagenes[currentImageIndex])) {
+                        if (imagenBoton.equals(arreglo_imagenes[currentImageIndex - 1])) {
                             puntos++;
                             txt_puntos.setText(String.valueOf(puntos));
                             botonSeleccionado.setDisable(true); // Deshabilitar el botón si es la imagen correcta
@@ -264,7 +282,5 @@ public class loteria extends Stage {
             }
         }
     }
-
-
 }
 
