@@ -11,9 +11,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.tapesp2024.components.CorredorThread;
+import org.example.tapesp2024.models.CancionDAO;
 import org.example.tapesp2024.models.Conexion;
 import org.example.tapesp2024.vistas.*;
 
+import javax.swing.text.TabableView;
+import javax.swing.text.TableView;
 import java.io.IOException;
 
 /* checar brach: git branch
@@ -30,7 +33,7 @@ public class HelloApplication extends Application {
     private BorderPane border_principal;
     private MenuBar menu_bar_principal;
     private Menu menu_competencia1, menu_competencia2, salida;
-    private MenuItem menu_item_calculadora, menu_item_loteria, menu_item_spotify, menu_item_buscaminas, menu_item_corredor, menu_item_impresion;
+    private MenuItem menu_item_calculadora, menu_item_loteria, menu_item_spotify, menu_item_buscaminas, menu_item_corredor, menu_item_impresion, menu_item_spotify2,menu_item_spotify3,menu_item_spotify4;
 
     public void CrearUI(){
         menu_item_calculadora = new MenuItem("Calculadora");
@@ -51,13 +54,26 @@ public class HelloApplication extends Application {
         menu_item_impresion = new MenuItem("Impresion");
         menu_item_impresion.setOnAction(actionEvent -> new Simulacion());
 
+        //pantallas de prueba anti pendejos
 
+        menu_item_spotify2 = new MenuItem("Spotify2");
+        menu_item_spotify2.setOnAction(actionEvent -> new PantallaAdminCanciones());
+
+        menu_item_spotify3 = new MenuItem("Spotify3");
+        menu_item_spotify3.setOnAction(actionEvent -> new login_admin_spotify());
+
+        menu_item_spotify4 = new MenuItem("Spotify4");
+        menu_item_spotify4.setOnAction(actionEvent -> new CancionComprar());
+
+        //menu_item_spotify5 = new MenuItem("Spotify5");
+        //menu_item_spotify5.setOnAction(actionEvent -> new FormularioCancion(TableView< CancionDAO >,CancionDAO));
+        //fin de pendejos
 
         menu_competencia1 = new Menu("Competencia 1");
         menu_competencia1.getItems().addAll(menu_item_calculadora, menu_item_loteria);
 
         menu_competencia2 = new Menu("Competencia 2");
-        menu_competencia2.getItems().addAll(menu_item_spotify, menu_item_buscaminas, menu_item_corredor, menu_item_impresion);
+        menu_competencia2.getItems().addAll(menu_item_spotify, menu_item_buscaminas, menu_item_corredor, menu_item_impresion, menu_item_spotify2,menu_item_spotify3,menu_item_spotify4);
 
 
         menu_bar_principal = new MenuBar(menu_competencia1, menu_competencia2);

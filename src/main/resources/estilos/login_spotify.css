@@ -1,0 +1,65 @@
+/* styles.css */
+/* Fondo principal */
+.root {
+    -fx-background-color: #191414; /* Fondo oscuro tipo Spotify */
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+/* Título */
+.label-title {
+    -fx-text-fill: #1DB954; /* Verde característico de Spotify */
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Etiquetas */
+.label {
+    -fx-text-fill: #191414; /* Texto en blanco */
+    -fx-font-size: 14px;
+}
+
+/* Campos de texto */
+.text-field, .password-field {
+    -fx-background-color: #191414; /* Fondo gris oscuro */
+    -fx-text-fill: #191414; /* Texto en blanco */
+    -fx-prompt-text-fill: #B3B3B3; /* Texto placeholder en gris claro */
+    -fx-border-color: #191414; /* Borde verde */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* Botones */
+.button {
+    -fx-background-color: #1DB954; /* Verde característico */
+    -fx-text-fill: #191414; /* Texto blanco */
+    -fx-font-weight: bold;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #1ed760; /* Verde más claro al pasar el mouse */
+}
+
+/* Botón rojo (opcional para botones de acción secundaria) */
+.button-danger {
+    -fx-background-color: #191414; /* Rojo intenso */
+    -fx-text-fill: #ffffff;
+}
+
+.button-danger:hover {
+    -fx-background-color: #191414; /* Rojo más claro */
+}
+
+/* VBox estilo */
+.vbox {
+    -fx-background-color: #282828; /* Fondo gris oscuro */
+    -fx-border-color: #1DB954;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-padding: 20px;
+    -fx-spacing: 10px;
+}

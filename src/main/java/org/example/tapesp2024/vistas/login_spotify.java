@@ -25,6 +25,7 @@ public class login_spotify extends Stage {
         this.setTitle("Inicio de Sesión - Spotify");
         clienteDAO = new ClienteDAO(); // Inicializa el objeto clienteDAO
         Scene escena = new Scene(createUI(), 300, 400);
+        escena.getStylesheets().add(getClass().getResource("/estilos/login_spotify.css").toExternalForm());
         this.setScene(escena);
         this.show();
     }
@@ -49,16 +50,16 @@ public class login_spotify extends Stage {
 
         // Botón de inicio de sesión
         btn_login = new Button("Iniciar Sesión");
-        btn_login.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+        btn_login.setStyle("-fx-background-color: #191414; -fx-text-fill: white; -fx-font-weight: bold;");
         btn_login.setOnAction(event -> openMenuView());
 
         // Botón de invitado
         btn_guest = new Button("Registrarse");
-        btn_guest.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
+        btn_guest.setStyle("-fx-background-color: #191414; -fx-text-fill: white; -fx-font-weight: bold;");
         btn_guest.setOnAction(event -> openGuestView());
 
         btn_admin = new Button("Admin");
-        btn_admin.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
+        btn_admin.setStyle("-fx-background-color: #191414; -fx-text-fill: white; -fx-font-weight: bold;");
         btn_admin.setOnAction(event -> openAdminView());
 
 
@@ -71,7 +72,14 @@ public class login_spotify extends Stage {
         VBox vbox = new VBox(10, label_title, label_user, text_user, label_pass, text_password, btn_login, btn_admin, btn_guest, label_message);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
-        vbox.setStyle("-fx-background-color: #F0F0F0; -fx-border-color: #B0B0B0; -fx-border-width: 2px; -fx-border-radius: 5px;");
+        vbox.setStyle("-fx-background-color: #1ed760; -fx-border-color: #B0B0B0; -fx-border-width: 2px; -fx-border-radius: 5px;");
+
+        label_title.getStyleClass().add("label-title");
+        text_user.getStyleClass().add("text-field");
+        text_password.getStyleClass().add("password-field");
+        btn_login.getStyleClass().add("button");
+        btn_guest.getStyleClass().add("button-danger");
+        btn_admin.getStyleClass().add("button-danger");
 
         return vbox;
     }
