@@ -7,29 +7,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.tapesp2024.models.ClienteDAO;
+import org.example.tapesp2024.models.AdminDAO;
 
-public class RegistroCliente extends Stage {
-    private TextField cliente;
-    private TextField telefono;
+public class RegistroAdmin extends Stage {
+    private TextField admin;
     private TextField contrasenia;
     private TextField usuario;
     private Button tbn_guardar, btn_salir;
     private VBox vbox;
-    private ClienteDAO clienteDAO;
+    private AdminDAO adminDAO;
     private Scene escena;
 
-    public RegistroCliente() {
+    public RegistroAdmin() {
         CrearIU();
-        if (clienteDAO != null) {
-            this.clienteDAO =  clienteDAO;
-            cliente.setText(clienteDAO.getCliente());
-            telefono.setText(clienteDAO.getTelefono());
-            usuario.setText(clienteDAO.getUsuario());
-            contrasenia.setText(clienteDAO.getContrasenia());
+        if (adminDAO != null) {
+            this.adminDAO = adminDAO;
+            admin.setText(adminDAO.getAdmin());
+            usuario.setText(adminDAO.getUsuario());
+            contrasenia.setText(adminDAO.getContrasenia());
             this.setTitle("Editar Cliente");
         }else{
-            this.clienteDAO = new ClienteDAO();
+            this.adminDAO = new AdminDAO();
             this.setTitle("Agregar Cliente");
         }
         this.setTitle("Agregar Cliente :)");
@@ -38,10 +36,8 @@ public class RegistroCliente extends Stage {
     }
 
     private void CrearIU() {
-        cliente = new TextField();
-        cliente.setPromptText("Cliente");
-        telefono = new TextField();
-        telefono.setPromptText("Telefono");
+        admin = new TextField();
+        admin.setPromptText("Cliente");
         usuario = new TextField();
         usuario.setPromptText("Usuario");
         contrasenia = new TextField();
@@ -49,45 +45,43 @@ public class RegistroCliente extends Stage {
         tbn_guardar = new Button("Guardar");
         tbn_guardar.setOnAction(actionEvent -> GuardarCliente());
         btn_salir = new Button("Salir");
-        btn_salir.setOnAction(actionEvent -> salirLogin());
-        vbox = new VBox(cliente, telefono, usuario, contrasenia, tbn_guardar, btn_salir);
+        btn_salir.setOnAction(actionEvent -> salirLoginAdmin());
+        vbox = new VBox(admin, usuario, contrasenia, tbn_guardar, btn_salir);
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(10);
         escena = new Scene(vbox, 150, 220);
     }
 
-    private void salirLogin() {
-        login_spotify login = new login_spotify();
+    private void salirLoginAdmin() {
+        login_admin_spotify login = new login_admin_spotify();
         login.show();
         this.close();
     }
 
     private void GuardarCliente() {
-        if (cliente.getText().isEmpty() || usuario.getText().isEmpty() ||
-                telefono.getText().isEmpty() || contrasenia.getText().isEmpty()) {
+        if (admin.getText().isEmpty() && usuario.getText().isEmpty() && contrasenia.getText().isEmpty()) {
 
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Error");
             alerta.setContentText("No se puede guardar el usuario porque no se han ingresado datos.");
             alerta.showAndWait();
+
             return;
         }
 
-        clienteDAO.setCliente(cliente.getText());
-        clienteDAO.setUsuario(usuario.getText());
-        clienteDAO.setTelefono(telefono.getText());
-        clienteDAO.setContrasenia(contrasenia.getText());
-        clienteDAO.setId_rol(2);
+        adminDAO.setAdmin(admin.getText());
+        adminDAO.setUsuario(usuario.getText());
+        adminDAO.setContrasenia(contrasenia.getText());
 
         String mensaje;
         Alert.AlertType type;
 
-        if (clienteDAO.getId_cliente() > 0) {
-            clienteDAO.UPDATE();
+        if (adminDAO.getId_admin() > 0) {
+            adminDAO.UPDATE();
             mensaje = "Usuario actualizado exitosamente";
             type = Alert.AlertType.INFORMATION;
-        } else {
-            if (clienteDAO.INSERT() > 0) {
+        } else {  // Si no tiene ID, se realiza un insert
+            if (adminDAO.INSERT() > 0) {
                 mensaje = "Usuario guardado exitosamente";
                 type = Alert.AlertType.INFORMATION;
             } else {
@@ -100,6 +94,6 @@ public class RegistroCliente extends Stage {
         alerta.setTitle("Mensaje del sistema :)");
         alerta.setContentText(mensaje);
         alerta.showAndWait();
-    }
 
+    }
 }

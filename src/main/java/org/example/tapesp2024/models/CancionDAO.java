@@ -3,9 +3,7 @@ package org.example.tapesp2024.models;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 import static org.example.tapesp2024.models.Conexion.connection;
 
@@ -14,17 +12,15 @@ public class CancionDAO {
     private String cancion;
     private float costo_cancion;
     private int id_genero;
-    private Blob imagen_cancion;
+    private byte[] imagen_cancion;
 
-    public CancionDAO(Blob imagen_cancion, int id_genero, float costo_cancion, String cancion, int id_cancion) {
-        this.imagen_cancion = imagen_cancion;
-        this.id_genero = id_genero;
-        this.costo_cancion = costo_cancion;
-        this.cancion = cancion;
+
+    public CancionDAO(int id_cancion, String cancion, float costo_cancion, int id_genero, byte[] imagen_cancion) {
         this.id_cancion = id_cancion;
-    }
-
-    public CancionDAO() {
+        this.cancion = cancion;
+        this.costo_cancion = costo_cancion;
+        this.id_genero = id_genero;
+        this.imagen_cancion = imagen_cancion;
     }
 
     public int getId_cancion() {
@@ -59,46 +55,56 @@ public class CancionDAO {
         this.id_genero = id_genero;
     }
 
-    public Blob getImagen_cancion() {
+    public byte[] getImagen_cancion() {
         return imagen_cancion;
     }
 
-    public void setImagen_cancion(Blob imagen_cancion) {
+    public void setImagen_cancion(byte[] imagen_cancion) {
         this.imagen_cancion = imagen_cancion;
     }
 
-    public int INSERT(){
+    public int INSERT(Connection connection) {
         int row_count;
-        String query = "INSERT INTO cancion(cancion, costo_cancion, id_genero, imagen_cancion) VALUES('"
-                + this.cancion + "','" + this.costo_cancion + "','" + this.id_genero + "','" + this.imagen_cancion + "')";
-        try {
-            Statement state = connection.createStatement();
-            row_count = state.executeUpdate(query);
+        String query = "INSERT INTO cancion(cancion, costo_cancion, id_genero, imagen_cancion) VALUES(?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            // Asignar los valores de los parámetros
+            pstmt.setString(1, this.cancion); // Asignar el valor de "cancion"
+            pstmt.setFloat(2, this.costo_cancion); // Asignar el valor de "costo_cancion"
+            pstmt.setInt(3, this.id_genero); // Asignar el valor de "id_genero"
+            pstmt.setBytes(4, this.imagen_cancion); // Asignar el valor de "imagen_cancion" como byte[]
+
+            // Ejecutar la consulta y obtener el número de filas afectadas
+            row_count = pstmt.executeUpdate();
         } catch (Exception e) {
             row_count = 0;
             e.printStackTrace();
         }
+
         return row_count;
     }
 
-    public ObservableList<CancionDAO> SELECTALL(){
-        CancionDAO cancionDao;
-        String query = "SELECT * FROM cancion";
+    public ObservableList<CancionDAO> SELECTALL() {
         ObservableList<CancionDAO> list_cancion = FXCollections.observableArrayList();
-        try {
-            Statement state = connection.createStatement();
-            ResultSet res = state.executeQuery(query);
-            while(res.next()){
-                cancionDao = new CancionDAO();
-                cancionDao.id_cancion = res.getInt(1);
-                cancionDao.cancion = res.getString(2);
-                cancionDao.costo_cancion = res.getFloat(3);
-                cancionDao.imagen_cancion = res.getBlob(4);
+        String query = "SELECT * FROM cancion";
+
+        try (Statement state = connection.createStatement(); ResultSet res = state.executeQuery(query)) {
+            while (res.next()) {
+                CancionDAO cancionDao = new CancionDAO(
+                        res.getInt("id_cancion"),
+                        res.getString("cancion"),
+                        res.getFloat("costo_cancion"),
+                        res.getInt("id_genero"),
+                        res.getBytes("imagen_cancion")
+                );
                 list_cancion.add(cancionDao);
             }
-        } catch (Exception e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return list_cancion;
     }
+
+
 }

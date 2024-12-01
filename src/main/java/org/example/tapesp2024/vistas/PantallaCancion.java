@@ -29,15 +29,13 @@ public class PantallaCancion extends Stage {
         toolBarMenu = new ToolBar();
         ImageView imageView = new ImageView(getClass().getResource("/images/siguiente.png").toString());
 
-        // Ajustar el tamaño de la imagen manteniendo las proporciones
-        imageView.setFitWidth(25); // Reducir ancho de la imagen
-        imageView.setPreserveRatio(true); // Mantener la proporción de la imagen
+        imageView.setFitWidth(25);
+        imageView.setPreserveRatio(true);
 
         Button btn_agregar_cliente = new Button();
         btn_agregar_cliente.setOnAction(actionEvent -> new FormularioCliente(tableViewClientes, null));
         btn_agregar_cliente.setGraphic(imageView);
 
-        // El tamaño del botón se ajustará automáticamente al tamaño de la imagen
         toolBarMenu.getItems().add(btn_agregar_cliente);
 
         tableViewClientes = new TableView<>();

@@ -13,7 +13,7 @@ import org.example.tapesp2024.models.ClienteDAO;
 public class ListaClientes extends Stage {
 
     private TableView<ClienteDAO> tableViewClientes;
-    private Button btn_agregar;
+    private Button btn_salir;
     private ToolBar toolBarMenu;
     private VBox vbox;
     private Scene escena;
@@ -29,20 +29,20 @@ public class ListaClientes extends Stage {
         toolBarMenu = new ToolBar();
         ImageView imageView = new ImageView(getClass().getResource("/images/siguiente.png").toString());
 
-        // Ajustar el tamaño de la imagen manteniendo las proporciones
-        imageView.setFitWidth(25); // Reducir ancho de la imagen
-        imageView.setPreserveRatio(true); // Mantener la proporción de la imagen
+        imageView.setFitWidth(25);
+        imageView.setPreserveRatio(true);
 
         Button btn_agregar_cliente = new Button();
         btn_agregar_cliente.setOnAction(actionEvent -> new FormularioCliente(tableViewClientes, null));
         btn_agregar_cliente.setGraphic(imageView);
 
-        // El tamaño del botón se ajustará automáticamente al tamaño de la imagen
         toolBarMenu.getItems().add(btn_agregar_cliente);
 
         tableViewClientes = new TableView<>();
         CrearTabla();
 
+        btn_salir = new Button();
+        //btn_salir.setOnAction(actionEvent);
         vbox = new VBox(toolBarMenu, tableViewClientes);
         escena = new Scene(vbox, 500, 250);
     }
@@ -51,14 +51,16 @@ public class ListaClientes extends Stage {
     private void CrearTabla() {
         ClienteDAO clienteDAO = new ClienteDAO();
         tableViewClientes = new TableView<ClienteDAO>();
+
         TableColumn<ClienteDAO, String> table_column_nombre = new TableColumn<>("Cliente");
         table_column_nombre.setCellValueFactory(new PropertyValueFactory<>("cliente"));
 
-        TableColumn<ClienteDAO, String> table_column_email = new TableColumn<>("Email");
-        table_column_email.setCellValueFactory(new PropertyValueFactory<>("email"));
-
         TableColumn<ClienteDAO, String> table_column_telefono = new TableColumn<>("Telefono");
         table_column_telefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
+
+        TableColumn<ClienteDAO, String> table_column_usuario = new TableColumn<>("Usuario");
+        table_column_usuario.setCellValueFactory(new PropertyValueFactory<>("usuario"));
+
 
         TableColumn<ClienteDAO, String> table_column_editar = new TableColumn<>("");
         table_column_editar.setCellFactory(new Callback<TableColumn<ClienteDAO, String>, TableCell<ClienteDAO, String>>() {
@@ -78,7 +80,7 @@ public class ListaClientes extends Stage {
 
 
 
-        tableViewClientes.getColumns().addAll(table_column_nombre, table_column_email, table_column_telefono, table_column_editar, table_column_eliminar);
+        tableViewClientes.getColumns().addAll(table_column_nombre, table_column_usuario, table_column_usuario, table_column_editar, table_column_eliminar);
         tableViewClientes.setItems(clienteDAO.SELECTALL());
     }
 }

@@ -11,44 +11,26 @@ import java.util.Optional;
 
 import static org.example.tapesp2024.models.Conexion.connection;
 
-public class ClienteDAO {
-    private int id_cliente;
-    private String cliente;
-    private String telefono;
+public class AdminDAO {
+    private int id_admin;
+    private String admin;
     private String usuario;
     private String contrasenia;
-    private int id_rol;
 
-    public int getId_rol() {
-        return id_rol;
+    public int getId_admin() {
+        return id_admin;
     }
 
-    public void setId_rol(int id_rol) {
-        this.id_rol = id_rol;
+    public void setId_admin(int id_admin) {
+        this.id_admin = id_admin;
     }
 
-    public int getId_cliente() {
-        return id_cliente;
+    public String getAdmin() {
+        return admin;
     }
 
-    public void setId_cliente(int id_cliente) {
-        this.id_cliente = id_cliente;
-    }
-
-    public String getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 
     public String getUsuario() {
@@ -67,10 +49,9 @@ public class ClienteDAO {
         this.contrasenia = contrasenia;
     }
 
-    public int INSERT() {
+    public int INSERT(){
         int row_count;
-        String query = "INSERT INTO cliente(cliente, telefono, usuario, contrasenia, id_rol) VALUES ('"
-                + this.cliente + "','" + this.telefono + "','" + this.usuario + "', '" + this.contrasenia + "', 2)";
+        String query = "insert into admin(admin, usuario, contrasenia) values('"+this.admin+"','"+this.usuario +"','"+this.contrasenia+"')";
         try {
             Statement state = connection.createStatement();
             row_count = state.executeUpdate(query);
@@ -82,7 +63,7 @@ public class ClienteDAO {
     };
 
     public void UPDATE(){
-        String query = "UPDATE cliente SET cliente = '"+this.cliente+"', telefono = '"+this.telefono+"', usuario = '"+this.usuario +"' WHERE id_cliente = '"+this.id_cliente+"'";
+        String query = "UPDATE admin SET admin = '"+this.admin+"', usuario = '"+this.usuario +"' WHERE id_admin = '"+this.id_admin +"'";
         try {
             Statement state = connection.createStatement();
             state.executeUpdate(query);
@@ -92,7 +73,7 @@ public class ClienteDAO {
     };
 
     public void DELETE(){
-        String query = "DELETE FROM cliente WHERE id_cliente = " + this.id_cliente;
+        String query = "DELETE FROM admin WHERE id_admin = " + this.id_admin;
         try {
             Statement state = connection.createStatement();
             state.executeUpdate(query);
@@ -101,21 +82,19 @@ public class ClienteDAO {
         }
     };
 
-    public ObservableList<ClienteDAO> SELECTALL(){
-        ClienteDAO clienteDAO;
-        String query = "SELECT * FROM cliente";
-        ObservableList<ClienteDAO> list_cliente = FXCollections.observableArrayList();
+    public ObservableList<AdminDAO> SELECTALL(){
+        AdminDAO clienteDAO;
+        String query = "SELECT * FROM admin";
+        ObservableList<AdminDAO> list_cliente = FXCollections.observableArrayList();
         try {
             Statement state = connection.createStatement();
             state.executeQuery(query);
             ResultSet res = state.executeQuery(query);
             while(res.next()){
-                clienteDAO  = new ClienteDAO();
-                clienteDAO.id_cliente = res.getInt(1);
-                clienteDAO.cliente = res.getString(2);
-                clienteDAO.telefono = res.getString(3);
+                clienteDAO  = new AdminDAO();
+                clienteDAO.id_admin = res.getInt(1);
+                clienteDAO.admin = res.getString(2);
                 clienteDAO.usuario = res.getString(4);
-                clienteDAO.id_cliente = res.getInt(5);
                 list_cliente.add(clienteDAO);
             }
         } catch (Exception e){
@@ -124,21 +103,19 @@ public class ClienteDAO {
         return list_cliente;
     }
 
-    public Optional<ClienteDAO> findById(int id) {
-        Optional<ClienteDAO> optEmp = Optional.empty();
-        String query = "select * from usuario where IDUsuario = ?";
+    public Optional<AdminDAO> findById(int id) {
+        Optional<AdminDAO> optEmp = Optional.empty();
+        String query = "select * from admin where id_admin = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                ClienteDAO user = new ClienteDAO();
-                user.setId_cliente(rs.getInt("IDUsuario"));
+                AdminDAO user = new AdminDAO();
+                user.setId_admin(rs.getInt("IDUsuario"));
                 user.setUsuario(rs.getString("username"));
                 user.setContrasenia(rs.getString("contrasena"));
-                user.setCliente(rs.getString("nombre"));
-                user.setTelefono(rs.getString("telefono"));
-                user.setId_rol(rs.getInt("id_rol"));
+                user.setAdmin(rs.getString("nombre"));
                 optEmp = Optional.of(user);
             }
 
@@ -150,13 +127,13 @@ public class ClienteDAO {
     }
 
     public int getUserID(String username){
-        String query = "select IDUsuario from usuario where username=?";
+        String query = "select id_admin from admin where usuario=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return rs.getInt("IDUsuario");
+                return rs.getInt("id_admin");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -165,36 +142,18 @@ public class ClienteDAO {
     }
 
     public boolean validateUser(String user, String contrasenia) {
-        String query = "select * from cliente where usuario = ? and contrasenia = ?";
+        String query = "select * from admin where admin = ? and contrasenia = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, user);
             statement.setString(2, contrasenia);
 
             ResultSet rs = statement.executeQuery();
-            return rs.next(); // Retorna true si el usuario existe
+            return rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-
-    public boolean isAdmin(String user, String contrasenia) {
-        String query = "SELECT id_rol FROM cliente WHERE usuario = ? AND contrasenia = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, user);
-            statement.setString(2, contrasenia);
-
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("id_rol") == 1; // Verifica si el rol es 1
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
 }

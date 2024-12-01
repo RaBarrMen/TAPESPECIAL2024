@@ -62,8 +62,8 @@ public class FormularioCliente extends Stage {
         String mensaje;
         Alert.AlertType type;
 
-        if (clienteDAO.getId_cliente() > 0) {  // Si el cliente ya tiene un ID, se hace el update
-            clienteDAO.UPDATE();  // Asume que UPDATE ya realiza la actualización
+        if (clienteDAO.getId_cliente() > 0) {
+            clienteDAO.UPDATE();
             mensaje = "Cliente actualizado exitosamente";
             type = Alert.AlertType.INFORMATION;
         } else {  // Si no tiene ID, se realiza un insert
@@ -76,17 +76,14 @@ public class FormularioCliente extends Stage {
             }
         }
 
-        // Mostrar el mensaje correspondiente en una alerta
         Alert alerta = new Alert(type);
         alerta.setTitle("Mensaje del sistema :)");
         alerta.setContentText(mensaje);
         alerta.showAndWait();
 
-        // Actualizar la tabla y refrescar después de guardar o actualizar
         tableView_cliente.setItems(clienteDAO.SELECTALL());
         tableView_cliente.refresh();
 
-        // Cerrar la ventana
         this.close();
     }
 

@@ -30,7 +30,7 @@ public class HelloApplication extends Application {
     private BorderPane border_principal;
     private MenuBar menu_bar_principal;
     private Menu menu_competencia1, menu_competencia2, salida;
-    private MenuItem menu_item_calculadora, menu_item_loteria, menu_item_spotify, menu_item_buscaminas, menu_item_corredor;
+    private MenuItem menu_item_calculadora, menu_item_loteria, menu_item_spotify, menu_item_buscaminas, menu_item_corredor, menu_item_impresion;
 
     public void CrearUI(){
         menu_item_calculadora = new MenuItem("Calculadora");
@@ -48,13 +48,16 @@ public class HelloApplication extends Application {
         menu_item_corredor = new MenuItem("Pista");
         menu_item_corredor.setOnAction(actionEvent -> new Pista());
 
+        menu_item_impresion = new MenuItem("Impresion");
+        menu_item_impresion.setOnAction(actionEvent -> new Simulacion());
+
 
 
         menu_competencia1 = new Menu("Competencia 1");
         menu_competencia1.getItems().addAll(menu_item_calculadora, menu_item_loteria);
 
         menu_competencia2 = new Menu("Competencia 2");
-        menu_competencia2.getItems().addAll(menu_item_spotify, menu_item_buscaminas, menu_item_corredor);
+        menu_competencia2.getItems().addAll(menu_item_spotify, menu_item_buscaminas, menu_item_corredor, menu_item_impresion);
 
 
         menu_bar_principal = new MenuBar(menu_competencia1, menu_competencia2);

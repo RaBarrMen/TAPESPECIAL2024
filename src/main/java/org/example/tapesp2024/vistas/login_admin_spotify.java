@@ -5,25 +5,23 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import org.example.tapesp2024.models.AdminDAO;
 import org.example.tapesp2024.models.ClienteDAO;
 
-import java.io.IOException;
-import java.util.Optional;
-
-public class login_spotify extends Stage {
+public class login_admin_spotify extends Stage {
     private TextField text_user;
     private PasswordField text_password;
     private Label label_title, label_user, label_pass, label_message;
-    private Button btn_login, btn_guest, btn_admin;
+    private Button btn_login, btn_regresar_login;
     private ClienteDAO clienteDAO;
 
-    public login_spotify() {
+    public login_admin_spotify() {
         this.setTitle("Inicio de Sesión - Spotify");
-        clienteDAO = new ClienteDAO(); // Inicializa el objeto clienteDAO
+        clienteDAO = new ClienteDAO();
         Scene escena = new Scene(createUI(), 300, 400);
         this.setScene(escena);
         this.show();
@@ -31,7 +29,7 @@ public class login_spotify extends Stage {
 
     private VBox createUI() {
         // Título
-        label_title = new Label("Inicio de sesión");
+        label_title = new Label("Inicio de sesión \nAdministrador");
         label_title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         label_title.setTextFill(Color.web("#333333"));
 
@@ -52,23 +50,16 @@ public class login_spotify extends Stage {
         btn_login.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
         btn_login.setOnAction(event -> openMenuView());
 
-        // Botón de invitado
-        btn_guest = new Button("Registrarse");
-        btn_guest.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
-        btn_guest.setOnAction(event -> openGuestView());
-
-        btn_admin = new Button("Admin");
-        btn_admin.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
-        btn_admin.setOnAction(event -> openAdminView());
-
-
+        btn_regresar_login = new Button("Regresar al \nlogin");
+        btn_regresar_login.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
+        btn_regresar_login.setOnAction(event -> openLoginNormal());
 
         // Mensaje de error o éxito
         label_message = new Label();
         label_message.setTextFill(Color.RED);
 
         // Crear y configurar el VBox
-        VBox vbox = new VBox(10, label_title, label_user, text_user, label_pass, text_password, btn_login, btn_admin, btn_guest, label_message);
+        VBox vbox = new VBox(10, label_title, label_user, text_user, label_pass, text_password, btn_login, btn_regresar_login, label_message);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-background-color: #F0F0F0; -fx-border-color: #B0B0B0; -fx-border-width: 2px; -fx-border-radius: 5px;");
@@ -77,30 +68,38 @@ public class login_spotify extends Stage {
     }
 
     private void openGuestView() {
-        RegistroCliente registroCliente = new RegistroCliente();
-        registroCliente.show();
+        RegistroAdmin registroAdmin = new RegistroAdmin();
+        registroAdmin.show();
+        this.close();
+    }
+
+    private void openLoginNormal(){
+        login_spotify login = new login_spotify();
+        login.show();
         this.close();
     }
 
     private void openMenuView() {
-        if (clienteDAO.validateUser(text_user.getText(), text_password.getText())) {
-            // Si el usuario es válido, abre la ventana PantallaUsuario
-            abrirPantallaUsuario();
-            Stage stage = (Stage) text_user.getScene().getWindow();
-            stage.close();
+        String username = text_user.getText();
+        String password = text_password.getText();
+
+        if (clienteDAO.validateUser(username, password)) {
+            if (clienteDAO.isAdmin(username, password)) {
+                abrirPantallaAdmin(); // Usuario con rol de administrador
+                Stage stage = (Stage) text_user.getScene().getWindow();
+                stage.close();
+            } else {
+                mostrarAlerta("Acceso denegado: solo los administradores pueden ingresar.");
+            }
         } else {
-            mostrarAlerta("Usuario o contraseña incorrecto o no existe");
+            mostrarAlerta("Usuario o contraseña incorrectos.");
         }
     }
 
-    private void openAdminView(){
-        login_admin_spotify loguin = new login_admin_spotify();
-        loguin.show();
-        this.close();
-    }
 
-    private void abrirPantallaUsuario() {
-        PantallaUsuario pantallaUsuario = new PantallaUsuario();
+    private void abrirPantallaAdmin() {
+        // Crear una nueva instancia de PantallaUsuario y mostrarla
+        PantallaAdminCanciones pantallaUsuario = new PantallaAdminCanciones();
         pantallaUsuario.show();
     }
 
