@@ -12,12 +12,11 @@ import java.util.Optional;
 import static org.example.tapesp2024.models.Conexion.connection;
 
 public class ClienteDAO {
-    private int id_cliente;
-    private String cliente;
     private String telefono;
     private String usuario;
     private String contrasenia;
     private int id_rol;
+    private int id_usuario;
 
     public int getId_rol() {
         return id_rol;
@@ -27,21 +26,14 @@ public class ClienteDAO {
         this.id_rol = id_rol;
     }
 
-    public int getId_cliente() {
-        return id_cliente;
+    public int getId_usuario() {
+        return id_usuario;
     }
 
-    public void setId_cliente(int id_cliente) {
-        this.id_cliente = id_cliente;
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
-    public String getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
-    }
 
     public String getTelefono() {
         return telefono;
@@ -69,8 +61,8 @@ public class ClienteDAO {
 
     public int INSERT() {
         int row_count;
-        String query = "INSERT INTO cliente(cliente, telefono, usuario, contrasenia, id_rol) VALUES ('"
-                + this.cliente + "','" + this.telefono + "','" + this.usuario + "', '" + this.contrasenia + "', 2)";
+        String query = "INSERT INTO usuario(telefono, usuario, contrasenia, id_rol) VALUES ('"
+                + this.telefono + "','" + this.usuario + "', '" + this.contrasenia + "', 2)";
         try {
             Statement state = connection.createStatement();
             row_count = state.executeUpdate(query);
@@ -82,7 +74,7 @@ public class ClienteDAO {
     };
 
     public void UPDATE(){
-        String query = "UPDATE cliente SET cliente = '"+this.cliente+"', telefono = '"+this.telefono+"', usuario = '"+this.usuario +"' WHERE id_cliente = '"+this.id_cliente+"'";
+        String query = "UPDATE usuario SET telefono = '"+this.telefono+"', usuario = '"+this.usuario +"' WHERE id_usuario = '"+this.id_usuario+"'";
         try {
             Statement state = connection.createStatement();
             state.executeUpdate(query);
@@ -92,7 +84,7 @@ public class ClienteDAO {
     };
 
     public void DELETE(){
-        String query = "DELETE FROM cliente WHERE id_cliente = " + this.id_cliente;
+        String query = "DELETE FROM usuario WHERE id_usuario = " + this.id_usuario;
         try {
             Statement state = connection.createStatement();
             state.executeUpdate(query);
@@ -103,7 +95,7 @@ public class ClienteDAO {
 
     public ObservableList<ClienteDAO> SELECTALL(){
         ClienteDAO clienteDAO;
-        String query = "SELECT * FROM cliente";
+        String query = "SELECT * FROM usuario";
         ObservableList<ClienteDAO> list_cliente = FXCollections.observableArrayList();
         try {
             Statement state = connection.createStatement();
@@ -111,11 +103,10 @@ public class ClienteDAO {
             ResultSet res = state.executeQuery(query);
             while(res.next()){
                 clienteDAO  = new ClienteDAO();
-                clienteDAO.id_cliente = res.getInt(1);
-                clienteDAO.cliente = res.getString(2);
-                clienteDAO.telefono = res.getString(3);
-                clienteDAO.usuario = res.getString(4);
-                clienteDAO.id_cliente = res.getInt(5);
+                clienteDAO.id_usuario = res.getInt(1);
+                clienteDAO.telefono = res.getString(2);
+                clienteDAO.usuario = res.getString(3);
+                clienteDAO.id_usuario = res.getInt(4);
                 list_cliente.add(clienteDAO);
             }
         } catch (Exception e){
@@ -126,17 +117,16 @@ public class ClienteDAO {
 
     public Optional<ClienteDAO> findById(int id) {
         Optional<ClienteDAO> optEmp = Optional.empty();
-        String query = "select * from usuario where IDUsuario = ?";
+        String query = "select * from usuario where id_usuario = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 ClienteDAO user = new ClienteDAO();
-                user.setId_cliente(rs.getInt("IDUsuario"));
-                user.setUsuario(rs.getString("username"));
+                user.setId_usuario(rs.getInt("id_usuario"));
+                user.setUsuario(rs.getString("usuario"));
                 user.setContrasenia(rs.getString("contrasena"));
-                user.setCliente(rs.getString("nombre"));
                 user.setTelefono(rs.getString("telefono"));
                 user.setId_rol(rs.getInt("id_rol"));
                 optEmp = Optional.of(user);
@@ -150,13 +140,13 @@ public class ClienteDAO {
     }
 
     public int getUserID(String username){
-        String query = "select IDUsuario from usuario where username=?";
+        String query = "select id_usuario from usuario where usuario=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return rs.getInt("IDUsuario");
+                return rs.getInt("id_usuario");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -165,7 +155,7 @@ public class ClienteDAO {
     }
 
     public boolean validateUser(String user, String contrasenia) {
-        String query = "select * from cliente where usuario = ? and contrasenia = ?";
+        String query = "select * from usuario where usuario = ? and contrasenia = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, user);
@@ -180,7 +170,7 @@ public class ClienteDAO {
     }
 
     public boolean isAdmin(String user, String contrasenia) {
-        String query = "SELECT id_rol FROM cliente WHERE usuario = ? AND contrasenia = ?";
+        String query = "SELECT id_rol FROM usuario WHERE usuario = ? AND contrasenia = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, user);

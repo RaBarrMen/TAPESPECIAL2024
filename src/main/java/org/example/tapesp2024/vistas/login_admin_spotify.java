@@ -23,46 +23,44 @@ public class login_admin_spotify extends Stage {
         this.setTitle("Inicio de Sesión - Spotify");
         clienteDAO = new ClienteDAO();
         Scene escena = new Scene(createUI(), 300, 400);
+        escena.getStylesheets().add(getClass().getResource("/estilos/login_admin_spotify.css").toExternalForm());
         this.setScene(escena);
         this.show();
     }
 
     private VBox createUI() {
-        // Título
         label_title = new Label("Inicio de sesión \nAdministrador");
         label_title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         label_title.setTextFill(Color.web("#333333"));
-
-        // Usuario
         label_user = new Label("Usuario");
         label_user.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         text_user = new TextField();
         text_user.setPromptText("Usuario");
-
-        // Contraseña
         label_pass = new Label("Contraseña");
         label_pass.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         text_password = new PasswordField();
         text_password.setPromptText("Contraseña");
-
-        // Botón de inicio de sesión
         btn_login = new Button("Iniciar Sesión");
-        btn_login.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
         btn_login.setOnAction(event -> openMenuView());
-
         btn_regresar_login = new Button("Regresar al \nlogin");
-        btn_regresar_login.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
         btn_regresar_login.setOnAction(event -> openLoginNormal());
-
-        // Mensaje de error o éxito
         label_message = new Label();
         label_message.setTextFill(Color.RED);
 
-        // Crear y configurar el VBox
         VBox vbox = new VBox(10, label_title, label_user, text_user, label_pass, text_password, btn_login, btn_regresar_login, label_message);
         vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(20));
-        vbox.setStyle("-fx-background-color: #F0F0F0; -fx-border-color: #B0B0B0; -fx-border-width: 2px; -fx-border-radius: 5px;");
+        vbox.setPadding(new Insets(25));
+        vbox.getStyleClass().add("card");
+        vbox.setAlignment(Pos.CENTER);
+        label_title.getStyleClass().add("title");
+        label_user.getStyleClass().add("label-text-field");
+        label_pass.getStyleClass().add("label-text-field");
+        label_message.getStyleClass().add("label-text-field");
+        text_user.getStyleClass().add("field");
+        text_password.getStyleClass().add("field");
+        btn_login.getStyleClass().add("btn");
+        btn_regresar_login.getStyleClass().add("btn");
+
 
         return vbox;
     }

@@ -26,38 +26,32 @@ public class PantallaAdminCanciones extends Stage {
         CrearIU();
         this.setTitle("Pantalla de Administrador");
         Scene escena = new Scene(vbox_compra, 400, 500);
+        escena.getStylesheets().add(getClass().getResource("/estilos/PantallaAdminCanciones.css").toExternalForm());
         this.setScene(escena);
         this.show();
     }
 
     private void CrearIU() {
-        label_Bienvenida = new Label("Bienvenido");
+
+        label_Bienvenida = new Label("Hola, Administrador");
         button_regresar_usuario = new Button("Regresar al login");
         button_regresar_usuario.setOnAction(event -> mostarPantallaUsuario());
 
         button_comprar_cancion = new Button("Añadir canción");
         button_comprar_cancion.setOnAction(event -> {
-            // Crear el diálogo para añadir una nueva canción
             AddNewProperties addNewPropertiesDialog = new AddNewProperties();
-
-            // Mostrar el diálogo y esperar la respuesta del usuario
             addNewPropertiesDialog.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    // Obtener la canción ingresada por el usuario
                     CancionDAO cancion = addNewPropertiesDialog.getCancion();
 
                     if (cancion != null) {
-                        // Verificar que la conexión a la base de datos esté creada
                         if (Conexion.connection == null) {
                             Conexion.crearConnection();
                         }
 
                         try {
-                            // Llamar al método INSERT para guardar la canción en la base de datos
                             int rowsAffected = cancion.INSERT(Conexion.connection);
                             boolean success = rowsAffected > 0;
-
-                            // Mostrar mensaje según el resultado de la operación
                             if (success) {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Canción agregada");
@@ -96,21 +90,27 @@ public class PantallaAdminCanciones extends Stage {
         button_comprar_album = new Button("Añadir álbum");
         button_comprar_album.setOnAction(event -> albumComprar());
 
-        // Cargar las imágenes con verificación
-        Image image_cancion = new Image(getClass().getResourceAsStream("/images/iconCancion.png"));
+        label_Bienvenida.getStyleClass().add("title");
+        button_regresar_usuario.getStyleClass().add("btn");
+        button_comprar_cancion.getStyleClass().add("btn");
+        button_comprar_album.getStyleClass().add("btn");
+
+        Image image_cancion = new Image(getClass().getResourceAsStream("/images/iconCancion.jpg"));
         if (image_cancion != null) {
             imageViewCancion = new ImageView(image_cancion);
-            imageViewCancion.setFitWidth(100);
-            imageViewCancion.setFitHeight(100);
+            imageViewCancion.setFitWidth(150);
+            imageViewCancion.setFitHeight(150);
+            imageViewCancion.getStyleClass().add("imagenes");
         } else {
             System.out.println("Error: Imagen 'iconCancion.png' no encontrada.");
         }
 
-        Image image_album = new Image(getClass().getResourceAsStream("/images/albumCancion.png"));
+        Image image_album = new Image(getClass().getResourceAsStream("/images/albumCancion.jpg"));
         if (image_album != null) {
             imageViewAlbum = new ImageView(image_album);
-            imageViewAlbum.setFitWidth(100);
-            imageViewAlbum.setFitHeight(100);
+            imageViewAlbum.setFitWidth(150);
+            imageViewAlbum.setFitHeight(150);
+            imageViewAlbum.getStyleClass().add("imagenes");
         } else {
             System.out.println("Error: Imagen 'albumCancion.png' no encontrada.");
         }
@@ -125,6 +125,7 @@ public class PantallaAdminCanciones extends Stage {
 
         vbox_compra.setAlignment(Pos.CENTER);
         vbox_compra.getChildren().addAll(label_Bienvenida, hbox_icon, hbox_compra, button_regresar_usuario);
+        vbox_compra.getStyleClass().add("card");
     }
 
     private void albumComprar() {

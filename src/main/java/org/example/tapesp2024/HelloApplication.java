@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.example.tapesp2024.components.CorredorThread;
 import org.example.tapesp2024.models.CancionDAO;
 import org.example.tapesp2024.models.Conexion;
