@@ -31,24 +31,26 @@
 
 /*Buttons*/
 .btn {
-        -fx-start-margin: 15px;
-        -fx-border-radius: 5px;
-        -fx-font-weight: bold;
-        -fx-font-size: .8em;
-        -fx-padding: 10px 0px;
-        -fx-background-color: #ffeba7;
-        -fx-text-fill: #5e6681;
-        -fx-animated: all .3s ease-in-out;
-        -fx-min-width: 120px;
-    }
+    -fx-start-margin: 15px;
+    -fx-border-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-font-size: 1em;
+    -fx-padding: 10px 0px;
+    -fx-background-color: #ffeba7;
+    -fx-text-fill: #5e6681;
+    -fx-animated: all .3s ease-in-out;
+    -fx-min-width: 150px;
+    -fx-max-width: 150px;
+    transition: -fx-background-color 1s
+}
 
 .label-text-field{
-        -fx-text-fill: #f5f5f5;
-        -fx-content-display: center;
-        -fx-font-size: 1em;
-        -fx-animated: color .3s ease-out;
+    -fx-text-fill: #f5f5f5;
+    -fx-content-display: center;
+    -fx-font-size: 1em;
+    -fx-animated: color 2s ease-out;
 
-    }
+}
 .btn:hover {
     -fx-background-color: #5e6681;
     -fx-text-fill: #ffeba7;
@@ -56,4 +58,11 @@
 
 .btn-link:hover {
     -fx-text-fill: #ffeba7;
+}
+
+.imagenes{
+    -fx-border-radius: 5px;
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-background-radius: 5px;
 }

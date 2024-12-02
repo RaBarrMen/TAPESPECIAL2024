@@ -1,33 +1,45 @@
 package org.example.tapesp2024.vistas;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.tapesp2024.models.ClienteDAO;
+
+
 
 public class PantallaUsuario extends Stage {
+    private ClienteDAO Cliente;
     Label label_bienvenida;
     Button btn_comprarCanciones, btn_historialCompras, btn_datosPersonales, btn_salir_login;
 
     public PantallaUsuario() {
         CrearIU();
         this.setTitle("Panel de Usuario");
-        Scene escena = new Scene(CrearIU(), 400, 500);
+        Scene escena = new Scene(CrearIU(), 300, 400);
+        escena.getStylesheets().add(getClass().getResource("/estilos/pantalla_usuario.css").toExternalForm());
         this.setScene(escena);
         this.show();
     }
 
     private VBox CrearIU() {
         // Crear componentes
-        label_bienvenida = new Label("Bienvenido, ");
+        label_bienvenida = new Label("Bienvenido");
         btn_comprarCanciones = new Button("Comprar Canciones o Álbumes");
         btn_historialCompras = new Button("Ver Historial de Compras");
         btn_datosPersonales = new Button("Ver Datos Personales");
         btn_salir_login = new Button("Salir al login");
 
-        // Configurar las acciones de los botones
+        label_bienvenida.getStyleClass().add("title");
+        btn_comprarCanciones.getStyleClass().add("btn");
+        btn_historialCompras.getStyleClass().add("btn");
+        btn_historialCompras.getStyleClass().add("btn");
+        btn_datosPersonales.getStyleClass().add("btn");
+        btn_salir_login.getStyleClass().add("btn");
+
         btn_comprarCanciones.setOnAction(event -> mostrarPantallaCompra());
         btn_historialCompras.setOnAction(event -> mostrarHistorialCompras());
         btn_datosPersonales.setOnAction(event -> mostrarDatosPersonales());
@@ -36,7 +48,7 @@ public class PantallaUsuario extends Stage {
         VBox vbox = new VBox(15);
         vbox.setAlignment(Pos.CENTER);
         vbox.getChildren().addAll(label_bienvenida, btn_comprarCanciones, btn_historialCompras, btn_datosPersonales, btn_salir_login);
-
+        vbox.getStyleClass().add("card");
         return vbox;
     }
 

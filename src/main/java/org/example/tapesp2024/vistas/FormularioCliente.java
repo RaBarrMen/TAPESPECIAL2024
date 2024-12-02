@@ -25,7 +25,7 @@ public class FormularioCliente extends Stage {
         CrearIU();
         if (objeto_cliente != null) {
             this.clienteDAO =  objeto_cliente;
-            cliente.setText(clienteDAO.getCliente());
+            cliente.setText(clienteDAO.getUsuario());
             telefono.setText(clienteDAO.getTelefono());
             email.setText(clienteDAO.getUsuario());
             this.setTitle("Editar Cliente");
@@ -55,14 +55,14 @@ public class FormularioCliente extends Stage {
 
     private void GuardarCliente() {
         // Asignar los valores ingresados en los campos de texto al clienteDAO
-        clienteDAO.setCliente(cliente.getText());
+        clienteDAO.setUsuario(cliente.getText());
         clienteDAO.setUsuario(email.getText());
         clienteDAO.setTelefono(telefono.getText());
 
         String mensaje;
         Alert.AlertType type;
 
-        if (clienteDAO.getId_cliente() > 0) {
+        if (clienteDAO.getId_usuario() > 0) {
             clienteDAO.UPDATE();
             mensaje = "Cliente actualizado exitosamente";
             type = Alert.AlertType.INFORMATION;
