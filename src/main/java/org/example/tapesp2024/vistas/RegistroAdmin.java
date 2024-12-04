@@ -17,6 +17,7 @@ public class RegistroAdmin extends Stage {
     private VBox vbox;
     private AdminDAO adminDAO;
     private Scene escena;
+    int id_usuario;
 
     public RegistroAdmin() {
         CrearIU();
@@ -53,7 +54,7 @@ public class RegistroAdmin extends Stage {
     }
 
     private void salirLoginAdmin() {
-        login_admin_spotify login = new login_admin_spotify();
+        login_admin_spotify login = new login_admin_spotify(this.id_usuario);
         login.show();
         this.close();
     }

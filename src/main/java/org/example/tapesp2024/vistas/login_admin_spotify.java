@@ -18,8 +18,10 @@ public class login_admin_spotify extends Stage {
     private Label label_title, label_user, label_pass, label_message;
     private Button btn_login, btn_regresar_login;
     private ClienteDAO clienteDAO;
+    int id_usuario;
 
-    public login_admin_spotify() {
+    public login_admin_spotify(int idUsuario) {
+        this.id_usuario = idUsuario;
         this.setTitle("Inicio de Sesión - Spotify");
         clienteDAO = new ClienteDAO();
         Scene escena = new Scene(createUI(), 300, 400);
@@ -41,7 +43,7 @@ public class login_admin_spotify extends Stage {
         text_password = new PasswordField();
         text_password.setPromptText("Contraseña");
         btn_login = new Button("Iniciar Sesión");
-        btn_login.setOnAction(event -> openMenuView());
+        btn_login.setOnAction(event -> openMenuView(this.id_usuario));
         btn_regresar_login = new Button("Regresar al \nlogin");
         btn_regresar_login.setOnAction(event -> openLoginNormal());
         label_message = new Label();
@@ -77,13 +79,13 @@ public class login_admin_spotify extends Stage {
         this.close();
     }
 
-    private void openMenuView() {
+    private void openMenuView(int id_usuario) {
         String username = text_user.getText();
         String password = text_password.getText();
 
         if (clienteDAO.validateUser(username, password)) {
             if (clienteDAO.isAdmin(username, password)) {
-                abrirPantallaAdmin(); // Usuario con rol de administrador
+                abrirPantallaAdmin(this.id_usuario); // Usuario con rol de administrador
                 Stage stage = (Stage) text_user.getScene().getWindow();
                 stage.close();
             } else {
@@ -95,9 +97,9 @@ public class login_admin_spotify extends Stage {
     }
 
 
-    private void abrirPantallaAdmin() {
+    private void abrirPantallaAdmin(int id_usuario) {
         // Crear una nueva instancia de PantallaUsuario y mostrarla
-        PantallaAdminCanciones pantallaUsuario = new PantallaAdminCanciones();
+        PantallaAdminCanciones pantallaUsuario = new PantallaAdminCanciones(this.id_usuario);
         pantallaUsuario.show();
     }
 

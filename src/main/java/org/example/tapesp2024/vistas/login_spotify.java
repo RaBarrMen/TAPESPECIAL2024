@@ -20,6 +20,7 @@ public class login_spotify extends Stage {
     private Label label_title, label_user, label_pass, label_message;
     private Button btn_login, btn_guest, btn_admin;
     private ClienteDAO clienteDAO;
+    int id_usuario;
 
     public login_spotify() {
         this.setTitle("Inicio de Sesión - Spotify");
@@ -124,7 +125,7 @@ public class login_spotify extends Stage {
 
 
     private void openAdminView(){
-        login_admin_spotify loguin = new login_admin_spotify();
+        login_admin_spotify loguin = new login_admin_spotify(this.id_usuario);
         loguin.show();
         this.close();
     }

@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.tapesp2024.models.CancionDAO;
+import org.example.tapesp2024.models.ClienteDAO;
 import org.example.tapesp2024.models.Conexion;
 
 public class PantallaAdminCanciones extends Stage {
@@ -21,8 +22,11 @@ public class PantallaAdminCanciones extends Stage {
     HBox hbox_compra = new HBox(15);
     HBox hbox_icon = new HBox(15);
     ImageView imageViewCancion, imageViewAlbum;
+    ClienteDAO clienteDAO = new ClienteDAO();
+    int id_usuario;
 
-    public PantallaAdminCanciones() {
+    public PantallaAdminCanciones(int id_usuario) {
+        this.id_usuario = id_usuario;
         CrearIU();
         this.setTitle("Pantalla de Administrador");
         Scene escena = new Scene(vbox_compra, 400, 500);
@@ -32,8 +36,10 @@ public class PantallaAdminCanciones extends Stage {
     }
 
     private void CrearIU() {
+        String nombreUsuario = clienteDAO.SELECTNAME(this.id_usuario).toString() /*!= null ? clienteDAO.getNombre() : "Usuario"*/;
+        label_Bienvenida = new Label("Bienvenido de nuevo admin, " + nombreUsuario);
 
-        label_Bienvenida = new Label("Hola, Administrador");
+
         button_regresar_usuario = new Button("Regresar al login");
         button_regresar_usuario.setOnAction(event -> mostarPantallaUsuario());
 
@@ -81,7 +87,7 @@ public class PantallaAdminCanciones extends Stage {
                 }
 
                 // Volver a la pantalla de administrador
-                new PantallaAdminCanciones().show();
+                new PantallaAdminCanciones(this.id_usuario).show();
                 this.close();
             });
         });

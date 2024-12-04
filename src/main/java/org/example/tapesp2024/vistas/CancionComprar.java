@@ -25,8 +25,10 @@ public class CancionComprar extends Stage {
     private VBox vbox;
     private Scene escena;
     ClienteDAO clienteDAO = new ClienteDAO();
+    int id_usuario;
 
-    public CancionComprar() {
+    public CancionComprar(int id_usuario) {
+        this.id_usuario = id_usuario;
         CrearUI();
         this.setTitle("Lista de Canciones");
         this.setScene(escena);
@@ -47,8 +49,7 @@ public class CancionComprar extends Stage {
     }
 
     private void SalirPantallaCompra() {
-        int idUsuario = clienteDAO.getUserID("nombreDeUsuario");
-        PantallaCompra pantalla = new PantallaCompra(idUsuario);
+        PantallaCompra pantalla = new PantallaCompra(0);//Esta mal
         pantalla.show();
         this.close();
     }

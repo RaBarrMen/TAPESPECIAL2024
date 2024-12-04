@@ -126,24 +126,22 @@ public class ClienteDAO {
         return list_cliente;
     }
 
-public Observable SELECTNAME(int id){
+public String SELECTNAME(int id){
         ClienteDAO clienteDAO;
 
-        String query = "SELECT nombre FROM usuario where id_usuario = '"+id+"' ";
+        String query = "SELECT nombre FROM usuario where id_usuario = ? ";
         ObservableList<ClienteDAO> list_cliente = FXCollections.observableArrayList();
         try {
-            Statement state = connection.createStatement();
-            state.executeQuery(query);
-            ResultSet res = state.executeQuery(query);
-            while(res.next()){
-                clienteDAO  = new ClienteDAO();
-                clienteDAO.nombre = res.getString(1);
-                list_cliente.add(clienteDAO);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nombre");
             }
         } catch (Exception e){
             e.printStackTrace();
         }
-        return list_cliente;
+        return "";
     }
 
     public Optional<ClienteDAO> findById(int id) {
@@ -184,6 +182,8 @@ public Observable SELECTNAME(int id){
         }
         return 0;
     }
+
+
 
     public boolean validateUser(String user, String contrasenia) {
         String query = "select * from usuario where usuario = ? and contrasenia = ?";

@@ -26,7 +26,7 @@ public class PantallaCompra extends Stage {
         this.id_usuario = idUsuario;
         CrearIU(); // Crea la interfaz con los datos del cliente.
         this.setTitle("Pantalla de Compra");
-        Scene escena = new Scene(vbox_compra, 400, 500);
+        Scene escena = new Scene(vbox_compra, 650, 500);
         escena.getStylesheets().add(getClass().getResource("/estilos/PantallaCompra.css").toExternalForm());
         this.setScene(escena);
         this.show();
@@ -85,14 +85,14 @@ public class PantallaCompra extends Stage {
     }
 
     private void cancionComprar() {
-        CancionComprar canc = new CancionComprar();
+        CancionComprar canc = new CancionComprar(this.id_usuario);
         canc.show();
         this.close();
     }
 
     private void mostarPantallaUsuario() {
-//        PantallaUsuario pantalla = new PantallaUsuario();
-//        pantalla.show();
-//        this.close();
+        PantallaUsuario pantalla = new PantallaUsuario(this.id_usuario);
+        pantalla.show();
+        this.close();
     }
 }

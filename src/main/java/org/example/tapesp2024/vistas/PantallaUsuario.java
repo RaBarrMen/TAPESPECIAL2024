@@ -20,7 +20,6 @@ public class PantallaUsuario extends Stage {
 
     public PantallaUsuario(int idUsuario) {
         this.id_usuario = idUsuario;
-        System.out.println(this.id_usuario+"Pene si se paso");
         CrearIU();
         this.setTitle("Panel de Usuario");
         Scene escena = new Scene(CrearIU(), 300, 400);
