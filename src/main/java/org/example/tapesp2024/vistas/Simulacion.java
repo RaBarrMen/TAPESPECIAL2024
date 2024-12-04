@@ -44,11 +44,11 @@ public class Simulacion extends Stage {
         tablaTareas.setEditable(false);
         TableColumn<TareaImpresion, Integer> colNoArchivo = new TableColumn<>("No. Archivo");
         colNoArchivo.setCellValueFactory(cellData -> cellData.getValue().numeroArchivoProperty().asObject());
-        TableColumn<TareaImpresion, String> colNombreArchivo = new TableColumn<>("Nombre de archivo");
+        TableColumn<TareaImpresion, String> colNombreArchivo = new TableColumn<>("Archivo");
         colNombreArchivo.setCellValueFactory(cellData -> cellData.getValue().nombreArchivoProperty());
-        TableColumn<TareaImpresion, Integer> colHojasImprimir = new TableColumn<>("Hojas a imprimir");
+        TableColumn<TareaImpresion, Integer> colHojasImprimir = new TableColumn<>("Hojas");
         colHojasImprimir.setCellValueFactory(cellData -> cellData.getValue().hojasImprimirProperty().asObject());
-        TableColumn<TareaImpresion, String> colHoraAcceso = new TableColumn<>("Hora de acceso");
+        TableColumn<TareaImpresion, String> colHoraAcceso = new TableColumn<>("Hora");
         colHoraAcceso.setCellValueFactory(cellData -> cellData.getValue().horaAccesoProperty());
 
         tablaTareas.getColumns().addAll(colNoArchivo, colNombreArchivo, colHojasImprimir, colHoraAcceso);
@@ -56,7 +56,7 @@ public class Simulacion extends Stage {
         btnAgregarTarea = new Button("Agregar Tarea");
         btnAgregarTarea.setOnAction(event -> agregarTarea());
 
-        btnControlSimulacion = new Button("Iniciar Simulación");
+        btnControlSimulacion = new Button("Iniciar");
         btnControlSimulacion.setOnAction(event -> controlSimulacion());
 
         progressBar = new ProgressBar();
@@ -64,7 +64,7 @@ public class Simulacion extends Stage {
 
         vContenedor = new VBox(tablaTareas, btnAgregarTarea, btnControlSimulacion, progressBar);
         vContenedor.setSpacing(5);
-        escena = new Scene(vContenedor, 400, 300);
+        escena = new Scene(vContenedor, 310, 500);
     }
 
     private void agregarTarea() {
@@ -96,11 +96,11 @@ public class Simulacion extends Stage {
     private void controlSimulacion() {
         simulacionActiva = !simulacionActiva;
         if (simulacionActiva) {
-            btnControlSimulacion.setText("Detener Simulación");
+            btnControlSimulacion.setText("Detener");
             progressBar.setVisible(true);
             iniciarSimulacion();
         } else {
-            btnControlSimulacion.setText("Iniciar Simulación");
+            btnControlSimulacion.setText("Iniciar");
             progressBar.setVisible(false);
         }
     }
@@ -119,13 +119,13 @@ public class Simulacion extends Stage {
                         // Retardo entre tareas
                         Thread.sleep(RETARDO_ENTRE_TAREAS_MS);
                     } else if (simulacionActiva && colaTareasPendientes.isEmpty()) {
-                        Thread.sleep(200); // Esperar un momento para evitar un bucle ocupado
+                        Thread.sleep(200);
                     }
                 }
                 if (colaTareasPendientes.isEmpty()) {
                     Platform.runLater(() -> {
                         simulacionActiva = false;
-                        btnControlSimulacion.setText("Iniciar Simulación");
+                        btnControlSimulacion.setText("Iniciar");
                         progressBar.setVisible(false);
 
                         colaTareasPendientes.addAll(nuevasTareas);
@@ -145,7 +145,7 @@ public class Simulacion extends Stage {
             if (!simulacionActiva) {
                 break;
             }
-            Thread.sleep(200); // Simula el tiempo de impresión por cada hoja
+            Thread.sleep(200); 
             final double progreso = (i + 1) / (double) totalHojas;
             Platform.runLater(() -> progressBar.setProgress(progreso));
         }

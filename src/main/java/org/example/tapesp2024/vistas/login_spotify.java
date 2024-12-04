@@ -94,7 +94,7 @@ public class login_spotify extends Stage {
         this.close();
     }
 
-    private void openMenuView() {
+    /*private void openMenuView() {
         if (clienteDAO.validateUser(text_user.getText(), text_password.getText())) {
             // Si el usuario es válido, abre la ventana PantallaUsuario
             abrirPantallaUsuario();
@@ -103,7 +103,25 @@ public class login_spotify extends Stage {
         } else {
             mostrarAlerta("Usuario o contraseña incorrecto o no existe");
         }
+    }*/
+
+    private void openMenuView() {
+        if (clienteDAO.validateUser(text_user.getText(), text_password.getText())) {
+            // Si el usuario es válido, obtener su ID
+            int userId = clienteDAO.getUserID(text_user.getText());
+            abrirPantallaUsuario(userId); // Pasar el ID a la siguiente pantalla
+            Stage stage = (Stage) text_user.getScene().getWindow();
+            stage.close();
+        } else {
+            mostrarAlerta("Usuario o contraseña incorrecto o no existe");
+        }
     }
+
+    private void abrirPantallaUsuario(int userId) {
+        PantallaUsuario pantallaUsuario = new PantallaUsuario(userId);
+        pantallaUsuario.show();
+    }
+
 
     private void openAdminView(){
         login_admin_spotify loguin = new login_admin_spotify();
@@ -111,10 +129,10 @@ public class login_spotify extends Stage {
         this.close();
     }
 
-    private void abrirPantallaUsuario() {
+    /*private void abrirPantallaUsuario() {
         PantallaUsuario pantallaUsuario = new PantallaUsuario();
         pantallaUsuario.show();
-    }
+    }*/
 
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -32,7 +32,6 @@ public class AddNewProperties extends Dialog<ButtonType> {
         ObservableList<GeneroDAO> generos = generoDAO.SELECTALL();
         generoComboBox.setItems(generos);
 
-        // Configura el ComboBox para mostrar solo el nombre del género
         generoComboBox.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(GeneroDAO item, boolean empty) {
@@ -41,7 +40,6 @@ public class AddNewProperties extends Dialog<ButtonType> {
             }
         });
 
-        // Establece el texto seleccionado en el ComboBox
         generoComboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(GeneroDAO item, boolean empty) {

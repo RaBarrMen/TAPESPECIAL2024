@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.tapesp2024.models.ClienteDAO;
 
 public class PantallaCompra extends Stage {
     Label label_Bienvenida;
@@ -17,9 +18,13 @@ public class PantallaCompra extends Stage {
     HBox hbox_compra = new HBox(15);
     HBox hbox_icon = new HBox(15);
     ImageView imageViewCancion, imageViewAlbum;
+    ClienteDAO clienteDAO = new ClienteDAO();
+    int id_usuario;
 
-    public PantallaCompra() {
-        CrearIU();
+    public PantallaCompra(int idUsuario) {
+        clienteDAO = clienteDAO.findById(idUsuario).orElse(new ClienteDAO()); // Busca el cliente en base al ID.
+        this.id_usuario = idUsuario;
+        CrearIU(); // Crea la interfaz con los datos del cliente.
         this.setTitle("Pantalla de Compra");
         Scene escena = new Scene(vbox_compra, 400, 500);
         escena.getStylesheets().add(getClass().getResource("/estilos/PantallaCompra.css").toExternalForm());
@@ -27,9 +32,12 @@ public class PantallaCompra extends Stage {
         this.show();
     }
 
-    private void CrearIU() {
 
-        label_Bienvenida = new Label("Bienvenido de nuevo");
+    private void CrearIU() {
+        // Usar el nombre obtenido del cliente
+        String nombreUsuario = clienteDAO.SELECTNAME(this.id_usuario).toString() /*!= null ? clienteDAO.getNombre() : "Usuario"*/;
+        label_Bienvenida = new Label("Bienvenido de nuevo, " + nombreUsuario);
+
         button_regresar_usuario = new Button("Regresar a pantalla de usuario");
         button_regresar_usuario.setOnAction(event -> mostarPantallaUsuario());
         button_comprar_cancion = new Button("Comprar canción");
@@ -41,9 +49,6 @@ public class PantallaCompra extends Stage {
         button_comprar_album.getStyleClass().add("btn");
         button_regresar_usuario.getStyleClass().add("btn");
         button_comprar_cancion.getStyleClass().add("btn");
-
-
-
 
         Image image_cancion = new Image(getClass().getResourceAsStream("/images/iconCancion.jpg"));
         if (image_cancion != null) {
@@ -72,9 +77,8 @@ public class PantallaCompra extends Stage {
         vbox_compra.setAlignment(Pos.CENTER);
         vbox_compra.getChildren().addAll(label_Bienvenida, hbox_icon, hbox_compra, button_regresar_usuario);
         vbox_compra.getStyleClass().add("card");
-
-
     }
+
 
     private void albumComprar() {
 
@@ -87,8 +91,8 @@ public class PantallaCompra extends Stage {
     }
 
     private void mostarPantallaUsuario() {
-        PantallaUsuario pantalla = new PantallaUsuario();
-        pantalla.show();
-        this.close();
+//        PantallaUsuario pantalla = new PantallaUsuario();
+//        pantalla.show();
+//        this.close();
     }
 }

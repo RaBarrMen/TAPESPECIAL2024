@@ -1,5 +1,6 @@
 package org.example.tapesp2024.models;
 
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
 import static org.example.tapesp2024.models.Conexion.connection;
 
 public class ClienteDAO {
+    private String nombre;
     private String telefono;
     private String usuario;
     private String contrasenia;
@@ -59,9 +61,17 @@ public class ClienteDAO {
         this.contrasenia = contrasenia;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public int INSERT() {
         int row_count;
-        String query = "INSERT INTO usuario(telefono, usuario, contrasenia, id_rol) VALUES ('"
+        String query = "INSERT INTO usuario(nombre, telefono, usuario, contrasenia, id_rol) VALUES ('"+this.nombre+"','"
                 + this.telefono + "','" + this.usuario + "', '" + this.contrasenia + "', 2)";
         try {
             Statement state = connection.createStatement();
@@ -104,9 +114,30 @@ public class ClienteDAO {
             while(res.next()){
                 clienteDAO  = new ClienteDAO();
                 clienteDAO.id_usuario = res.getInt(1);
-                clienteDAO.telefono = res.getString(2);
-                clienteDAO.usuario = res.getString(3);
-                clienteDAO.id_usuario = res.getInt(4);
+                clienteDAO.nombre = res.getString(2);
+                clienteDAO.telefono = res.getString(3);
+                clienteDAO.usuario = res.getString(4);
+                clienteDAO.id_usuario = res.getInt(5);
+                list_cliente.add(clienteDAO);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return list_cliente;
+    }
+
+public Observable SELECTNAME(int id){
+        ClienteDAO clienteDAO;
+
+        String query = "SELECT nombre FROM usuario where id_usuario = '"+id+"' ";
+        ObservableList<ClienteDAO> list_cliente = FXCollections.observableArrayList();
+        try {
+            Statement state = connection.createStatement();
+            state.executeQuery(query);
+            ResultSet res = state.executeQuery(query);
+            while(res.next()){
+                clienteDAO  = new ClienteDAO();
+                clienteDAO.nombre = res.getString(1);
                 list_cliente.add(clienteDAO);
             }
         } catch (Exception e){
@@ -126,7 +157,7 @@ public class ClienteDAO {
                 ClienteDAO user = new ClienteDAO();
                 user.setId_usuario(rs.getInt("id_usuario"));
                 user.setUsuario(rs.getString("usuario"));
-                user.setContrasenia(rs.getString("contrasena"));
+                user.setContrasenia(rs.getString("contrasenia"));
                 user.setTelefono(rs.getString("telefono"));
                 user.setId_rol(rs.getInt("id_rol"));
                 optEmp = Optional.of(user);
@@ -162,7 +193,7 @@ public class ClienteDAO {
             statement.setString(2, contrasenia);
 
             ResultSet rs = statement.executeQuery();
-            return rs.next(); // Retorna true si el usuario existe
+            return rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -178,7 +209,7 @@ public class ClienteDAO {
 
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return rs.getInt("id_rol") == 1; // Verifica si el rol es 1
+                return rs.getInt("id_rol") == 1;
             }
         } catch (SQLException e) {
             e.printStackTrace();

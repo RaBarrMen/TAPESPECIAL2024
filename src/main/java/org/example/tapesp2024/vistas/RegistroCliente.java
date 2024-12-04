@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.example.tapesp2024.models.ClienteDAO;
 
 public class RegistroCliente extends Stage {
+    private TextField nombre;
     private TextField telefono;
     private TextField contrasenia;
     private TextField usuario;
@@ -41,17 +42,27 @@ public class RegistroCliente extends Stage {
     private void CrearIU() {
         titulo = new Label();
         titulo.setText("Registro");
+
+        nombre = new TextField();
+        nombre.setPromptText("nombre");
+
         telefono = new TextField();
         telefono.setPromptText("Telefono");
+
+
         usuario = new TextField();
         usuario.setPromptText("Usuario");
+
         contrasenia = new TextField();
         contrasenia.setPromptText("Contraseña");
+
         btn_guardar = new Button("Guardar");
         btn_guardar.setOnAction(actionEvent -> GuardarCliente());
+
         btn_salir = new Button("Salir");
         btn_salir.setOnAction(actionEvent -> salirLogin());
-        vbox = new VBox(titulo, telefono, usuario, contrasenia, btn_guardar, btn_salir);
+
+        vbox = new VBox(titulo, nombre, telefono, usuario, contrasenia, btn_guardar, btn_salir);
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(10);
         vbox.getStyleClass().add("card");
@@ -59,6 +70,7 @@ public class RegistroCliente extends Stage {
         titulo.getStyleClass().add("title");
         btn_guardar.getStyleClass().add("btn");
         btn_salir.getStyleClass().add("btn");
+        nombre.getStyleClass().add("field");
         usuario.getStyleClass().add("field");
         telefono.getStyleClass().add("field");
         contrasenia.getStyleClass().add("field");
@@ -84,6 +96,7 @@ public class RegistroCliente extends Stage {
             return;
         }
 
+        clienteDAO.setNombre(nombre.getText());
         clienteDAO.setUsuario(usuario.getText());
         clienteDAO.setTelefono(telefono.getText());
         clienteDAO.setContrasenia(contrasenia.getText());

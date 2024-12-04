@@ -52,7 +52,7 @@ public class FormularioCancion extends Stage {
         Label lblGenero = new Label("Género:");
         cmbGenero = new ComboBox<>();
         cmbGenero.getItems().addAll();
-        cmbGenero.getSelectionModel().select(cancionDAO.getId_genero() - 1); // Asumiendo que `id_genero` comienza en 1
+        cmbGenero.getSelectionModel().select(cancionDAO.getId_genero() - 1);
 
         Label lblImagen = new Label("Imagen:");
         imageView = new ImageView();

@@ -15,8 +15,12 @@ public class PantallaUsuario extends Stage {
     private ClienteDAO Cliente;
     Label label_bienvenida;
     Button btn_comprarCanciones, btn_historialCompras, btn_datosPersonales, btn_salir_login;
+    ClienteDAO clienteDAO = new ClienteDAO();
+    int id_usuario;
 
-    public PantallaUsuario() {
+    public PantallaUsuario(int idUsuario) {
+        this.id_usuario = idUsuario;
+        System.out.println(this.id_usuario+"Pene si se paso");
         CrearIU();
         this.setTitle("Panel de Usuario");
         Scene escena = new Scene(CrearIU(), 300, 400);
@@ -26,6 +30,8 @@ public class PantallaUsuario extends Stage {
     }
 
     private VBox CrearIU() {
+        String nombreUsuario = clienteDAO.getNombre() != null ? clienteDAO.getNombre() : "Usuario";
+        label_bienvenida = new Label("Bienvenido de nuevo, " + nombreUsuario);
         // Crear componentes
         label_bienvenida = new Label("Bienvenido");
         btn_comprarCanciones = new Button("Comprar Canciones o Álbumes");
@@ -64,7 +70,7 @@ public class PantallaUsuario extends Stage {
     // Métodos para mostrar las distintas pantallas
 
     private void mostrarPantallaCompra() {
-        PantallaCompra pantalla_compra = new PantallaCompra();
+        PantallaCompra pantalla_compra = new PantallaCompra(this.id_usuario);
         pantalla_compra.show();
         this.close();
     }
