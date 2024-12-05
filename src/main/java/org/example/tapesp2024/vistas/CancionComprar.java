@@ -13,6 +13,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.example.tapesp2024.models.ClienteDAO;
+import org.example.tapesp2024.models.VentaDAO;
+import org.example.tapesp2024.models.Venta_DetalleDAO;
 
 import java.io.ByteArrayInputStream;
 
@@ -36,7 +38,6 @@ public class CancionComprar extends Stage {
     }
 
     private void CrearUI() {
-        toolBarMenu = new ToolBar();
 
         tableViewCanciones = new TableView<>();
         CrearTabla();
@@ -44,8 +45,9 @@ public class CancionComprar extends Stage {
         btnSalir = new Button("Salir");
         btnSalir.setOnAction(actionEvent -> SalirPantallaCompra());
 
-        vbox = new VBox(toolBarMenu, tableViewCanciones, btnSalir);
+        vbox = new VBox(tableViewCanciones, btnSalir);
         escena = new Scene(vbox, 600, 300);
+        escena.getStylesheets().add(getClass().getResource("/estilos/CancionComprar.css").toExternalForm());
     }
 
     private void SalirPantallaCompra() {
@@ -94,6 +96,11 @@ public class CancionComprar extends Stage {
                     CancionDAO cancionSeleccionada = getTableView().getItems().get(getIndex());
                     if (cancionSeleccionada != null) {
                         mostrarVentanaCompra(cancionSeleccionada);
+
+                        tableViewCanciones.getStyleClass().add("table-view");
+                        btnSalir.getStyleClass().add("btn");
+                        tableColumnNombre.getStyleClass().add("column");
+
                     }
                 });
             }
@@ -116,15 +123,22 @@ public class CancionComprar extends Stage {
                     imagenCancion.setFitHeight(200);
                 }
 
+                Button btnEjecutarCompra = new Button("Ejecutar Compra");
+                btnEjecutarCompra.setOnAction(e -> {
+                    ejecutarCompra(cancion);
+                    ventanaCompra.close();
+                });
+
                 Button btnCerrar = new Button("Cerrar");
                 btnCerrar.setOnAction(e -> ventanaCompra.close());
 
-                layout.getChildren().addAll(lblNombre, lblCosto, imagenCancion, btnCerrar);
+                layout.getChildren().addAll(lblNombre, lblCosto, imagenCancion, btnEjecutarCompra, btnCerrar);
 
                 Scene escena = new Scene(layout, 300, 400);
                 ventanaCompra.setScene(escena);
                 ventanaCompra.showAndWait();
             }
+
 
 
             @Override
@@ -146,4 +160,62 @@ public class CancionComprar extends Stage {
         tableViewCanciones.setItems(cancionDAO.SELECTALL());
 
     }
+
+    private void ejecutarCompra(CancionDAO cancion) {
+        try {
+            // Crear una instancia de VentaDAO
+            VentaDAO ventaDAO = new VentaDAO();
+
+            // Asignar valores para la venta
+            ventaDAO.setId_cancion(cancion.getId_cancion());  // ID de la canción
+            ventaDAO.setId_usuario(this.id_usuario);  // ID del usuario que está comprando
+
+            // Insertar la venta
+            int rowCountVenta = ventaDAO.INSERT();  // Inserta la venta
+
+            if (rowCountVenta > 0) {
+                // Si la venta fue exitosa, insertamos el detalle de venta
+                Venta_DetalleDAO ventaDetalleDAO = new Venta_DetalleDAO();
+                ventaDetalleDAO.setId_venta(ventaDAO.getId_venta());  // Usamos el ID de la venta insertada
+                ventaDetalleDAO.setMonto(cancion.getCosto_cancion());  // Usamos el costo de la canción
+                ventaDetalleDAO.setFecha(new java.util.Date());  // Usamos la fecha actual
+
+                // Insertar detalle de venta
+                int rowCountDetalle = ventaDetalleDAO.INSERT();
+                if (rowCountDetalle > 0) {
+                    // Si el detalle también fue insertado correctamente
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Compra Exitosa");
+                    alert.setHeaderText("La compra se realizó exitosamente");
+                    alert.setContentText("La canción ha sido comprada.");
+                    alert.showAndWait();
+                } else {
+                    // Si hubo un error al insertar el detalle
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error en la compra");
+                    alert.setHeaderText("Error al insertar el detalle de la venta");
+                    alert.setContentText("Por favor, intente nuevamente.");
+                    alert.showAndWait();
+                }
+            } else {
+                // Si hubo un error al insertar la venta
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error en la compra");
+                alert.setHeaderText("Error al realizar la venta");
+                alert.setContentText("Por favor, intente nuevamente.");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Manejar cualquier excepción
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error en la compra");
+            alert.setHeaderText("Error inesperado");
+            alert.setContentText("Ocurrió un error al realizar la compra.");
+            alert.showAndWait();
+        }
+    }
+
+
+
 }

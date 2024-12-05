@@ -45,7 +45,7 @@ public class login_admin_spotify extends Stage {
         btn_login = new Button("Iniciar Sesión");
         btn_login.setOnAction(event -> openMenuView(this.id_usuario));
         btn_regresar_login = new Button("Regresar al \nlogin");
-        btn_regresar_login.setOnAction(event -> openLoginNormal());
+        btn_regresar_login.setOnAction(event -> openLoginNormal(this.id_usuario));
         label_message = new Label();
         label_message.setTextFill(Color.RED);
 
@@ -73,8 +73,8 @@ public class login_admin_spotify extends Stage {
         this.close();
     }
 
-    private void openLoginNormal(){
-        login_spotify login = new login_spotify();
+    private void openLoginNormal(int id_usuario){
+        login_spotify login = new login_spotify(this.id_usuario);
         login.show();
         this.close();
     }

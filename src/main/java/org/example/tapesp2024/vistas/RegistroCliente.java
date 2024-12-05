@@ -21,6 +21,7 @@ public class RegistroCliente extends Stage {
     private ClienteDAO clienteDAO;
     private Scene escena;
     private Label titulo;
+    int id_usuario;
 
     public RegistroCliente() {
         CrearIU();
@@ -60,7 +61,7 @@ public class RegistroCliente extends Stage {
         btn_guardar.setOnAction(actionEvent -> GuardarCliente());
 
         btn_salir = new Button("Salir");
-        btn_salir.setOnAction(actionEvent -> salirLogin());
+        btn_salir.setOnAction(actionEvent -> salirLogin(this.id_usuario));
 
         vbox = new VBox(titulo, nombre, telefono, usuario, contrasenia, btn_guardar, btn_salir);
         vbox.setPadding(new Insets(10));
@@ -79,8 +80,8 @@ public class RegistroCliente extends Stage {
 
     }
 
-    private void salirLogin() {
-        login_spotify login = new login_spotify();
+    private void salirLogin(int id_usuario) {
+        login_spotify login = new login_spotify(this.id_usuario);
         login.show();
         this.close();
     }

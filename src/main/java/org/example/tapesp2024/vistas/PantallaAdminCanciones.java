@@ -145,7 +145,7 @@ public class PantallaAdminCanciones extends Stage {
     }
 
     private void mostarPantallaUsuario() {
-        login_spotify pantalla = new login_spotify();
+        login_spotify pantalla = new login_spotify(this.id_usuario);
         pantalla.show();
         this.close();
     }

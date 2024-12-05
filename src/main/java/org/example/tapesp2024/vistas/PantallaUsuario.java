@@ -48,7 +48,7 @@ public class PantallaUsuario extends Stage {
         btn_comprarCanciones.setOnAction(event -> mostrarPantallaCompra());
         btn_historialCompras.setOnAction(event -> mostrarHistorialCompras());
         btn_datosPersonales.setOnAction(event -> mostrarDatosPersonales());
-        btn_salir_login.setOnAction(event -> mostrarLogin());
+        btn_salir_login.setOnAction(event -> mostrarLogin(this.id_usuario));
         // Configurar el layout
         VBox vbox = new VBox(15);
         vbox.setAlignment(Pos.CENTER);
@@ -57,9 +57,9 @@ public class PantallaUsuario extends Stage {
         return vbox;
     }
 
-    private void mostrarLogin() {
+    private void mostrarLogin(int id_usuario) {
         // Crear y mostrar la ventana de login
-        login_spotify loginWindow = new login_spotify();
+        login_spotify loginWindow = new login_spotify(this.id_usuario);
         loginWindow.show();
 
         this.close();

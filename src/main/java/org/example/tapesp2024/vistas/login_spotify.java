@@ -22,7 +22,8 @@ public class login_spotify extends Stage {
     private ClienteDAO clienteDAO;
     int id_usuario;
 
-    public login_spotify() {
+    public login_spotify(int idUsuario) {
+        this.id_usuario = idUsuario;
         this.setTitle("Inicio de Sesión - Spotify");
         clienteDAO = new ClienteDAO(); // Inicializa el objeto clienteDAO
         Scene escena = new Scene(createUI(), 300, 400);
@@ -54,7 +55,7 @@ public class login_spotify extends Stage {
         btn_guest.setOnAction(event -> openGuestView());
 
         btn_admin = new Button("Admin");
-        btn_admin.setOnAction(event -> openAdminView());
+        btn_admin.setOnAction(event -> openAdminView(this.id_usuario));
 
 
 
@@ -124,8 +125,8 @@ public class login_spotify extends Stage {
     }
 
 
-    private void openAdminView(){
-        login_admin_spotify loguin = new login_admin_spotify(this.id_usuario);
+    private void openAdminView(int userId){
+        login_admin_spotify loguin = new login_admin_spotify(userId);
         loguin.show();
         this.close();
     }

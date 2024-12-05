@@ -35,6 +35,7 @@ public class HelloApplication extends Application {
     private MenuBar menu_bar_principal;
     private Menu menu_competencia1, menu_competencia2, salida;
     private MenuItem menu_item_calculadora, menu_item_loteria, menu_item_spotify, menu_item_buscaminas, menu_item_corredor, menu_item_impresion, menu_item_spotify2,menu_item_spotify3,menu_item_spotify4;
+    int id_usuario;
 
     public void CrearUI(){
         menu_item_calculadora = new MenuItem("Calculadora");
@@ -44,7 +45,7 @@ public class HelloApplication extends Application {
         menu_item_loteria.setOnAction(actionEvent -> new loteria());
 
         menu_item_spotify = new MenuItem("Spotify");
-        menu_item_spotify.setOnAction(actionEvent -> new login_spotify());
+        menu_item_spotify.setOnAction(actionEvent -> new login_spotify(this.id_usuario));
 
         menu_item_buscaminas = new MenuItem("Buscaminas");
         menu_item_buscaminas.setOnAction(actionEvent -> new PantallaBuscaminas());
