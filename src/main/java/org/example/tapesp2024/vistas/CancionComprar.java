@@ -4,26 +4,23 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.example.tapesp2024.models.CancionDAO;
-
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import org.example.tapesp2024.models.CancionDAO;
 import org.example.tapesp2024.models.ClienteDAO;
 import org.example.tapesp2024.models.VentaDAO;
 import org.example.tapesp2024.models.Venta_DetalleDAO;
 
 import java.io.ByteArrayInputStream;
 
-
 public class CancionComprar extends Stage {
 
     private TableView<CancionDAO> tableViewCanciones;
     private Button btnSalir;
-    private ToolBar toolBarMenu;
     private VBox vbox;
     private Scene escena;
     ClienteDAO clienteDAO = new ClienteDAO();
@@ -38,43 +35,56 @@ public class CancionComprar extends Stage {
     }
 
     private void CrearUI() {
-
+        // Crear TableView
         tableViewCanciones = new TableView<>();
+        tableViewCanciones.getStyleClass().add("table-view"); // Clase CSS personalizada
+
+        // Crear las columnas de la tabla
         CrearTabla();
 
+        // Crear botón Salir
         btnSalir = new Button("Salir");
+        btnSalir.getStyleClass().add("button"); // Aplica estilo definido para botones en el CSS
         btnSalir.setOnAction(actionEvent -> SalirPantallaCompra());
 
-        vbox = new VBox(tableViewCanciones, btnSalir);
-        escena = new Scene(vbox, 600, 300);
+        // Crear layout principal (root)
+        vbox = new VBox(10, tableViewCanciones, btnSalir);
+        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("root"); // Aplica la clase 'root' al VBox
+
+        // Crear escena y agregar estilos
+        escena = new Scene(vbox, 600, 400);
         escena.getStylesheets().add(getClass().getResource("/estilos/CancionComprar.css").toExternalForm());
     }
 
     private void SalirPantallaCompra() {
-        PantallaCompra pantalla = new PantallaCompra(0);//Esta mal
+        PantallaCompra pantalla = new PantallaCompra(0); // Lógica de cierre
         pantalla.show();
         this.close();
     }
 
+
     private void CrearTabla() {
         CancionDAO cancionDAO = new CancionDAO(0, "", 0.0f, 0, null);
 
-        // Columna para el nombre de la canción
+        // Crear columnas
         TableColumn<CancionDAO, String> tableColumnNombre = new TableColumn<>("Canción");
         tableColumnNombre.setCellValueFactory(new PropertyValueFactory<>("cancion"));
+        tableColumnNombre.getStyleClass().add("column"); // Aplica estilo personalizado
 
-        // Columna para el costo de la canción
         TableColumn<CancionDAO, Float> tableColumnPrecio = new TableColumn<>("Costo");
         tableColumnPrecio.setCellValueFactory(new PropertyValueFactory<>("costo_cancion"));
+        tableColumnPrecio.getStyleClass().add("column");
 
-        // Columna para el género (muestra el ID directamente o texto si se adapta)
         TableColumn<CancionDAO, Integer> tableColumnGenero = new TableColumn<>("Género");
         tableColumnGenero.setCellValueFactory(new PropertyValueFactory<>("id_genero"));
+        tableColumnGenero.getStyleClass().add("column");
 
-        // Columna para el ID de la canción
         TableColumn<CancionDAO, Integer> tableColumnId = new TableColumn<>("ID");
         tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id_cancion"));
+        tableColumnId.getStyleClass().add("column");
 
+        // Columna de Imagen
         TableColumn<CancionDAO, ImageView> tableColumnImagen = new TableColumn<>("Imagen");
         tableColumnImagen.setCellValueFactory(data -> {
             byte[] imagenBytes = data.getValue().getImagen_cancion();
@@ -82,25 +92,24 @@ public class CancionComprar extends Stage {
                 ImageView imageView = new ImageView(new Image(new ByteArrayInputStream(imagenBytes)));
                 imageView.setFitWidth(100);
                 imageView.setFitHeight(100);
+                imageView.getStyleClass().add("table-cell-image");// Aplica estilo a la celda de la imagen
+                tableColumnImagen.getStyleClass().add("column");
                 return new SimpleObjectProperty<>(imageView);
             }
             return new SimpleObjectProperty<>(null);
         });
 
+        // Columna de Acciones
         TableColumn<CancionDAO, Void> tableColumnAcciones = new TableColumn<>("Acciones");
         tableColumnAcciones.setCellFactory(tc -> new TableCell<>() {
             private final Button btnComprar = new Button("Comprar");
 
             {
+                btnComprar.getStyleClass().add("button"); // Aplica estilo definido para botones
                 btnComprar.setOnAction(e -> {
                     CancionDAO cancionSeleccionada = getTableView().getItems().get(getIndex());
                     if (cancionSeleccionada != null) {
                         mostrarVentanaCompra(cancionSeleccionada);
-
-                        tableViewCanciones.getStyleClass().add("table-view");
-                        btnSalir.getStyleClass().add("btn");
-                        tableColumnNombre.getStyleClass().add("column");
-
                     }
                 });
             }
@@ -124,22 +133,23 @@ public class CancionComprar extends Stage {
                 }
 
                 Button btnEjecutarCompra = new Button("Ejecutar Compra");
+                btnEjecutarCompra.getStyleClass().add("button");
                 btnEjecutarCompra.setOnAction(e -> {
                     ejecutarCompra(cancion);
                     ventanaCompra.close();
                 });
 
                 Button btnCerrar = new Button("Cerrar");
+                btnCerrar.getStyleClass().add("button");
                 btnCerrar.setOnAction(e -> ventanaCompra.close());
 
                 layout.getChildren().addAll(lblNombre, lblCosto, imagenCancion, btnEjecutarCompra, btnCerrar);
 
                 Scene escena = new Scene(layout, 300, 400);
+                escena.getStylesheets().add(getClass().getResource("/estilos/CancionComprar.css").toExternalForm());
                 ventanaCompra.setScene(escena);
                 ventanaCompra.showAndWait();
             }
-
-
 
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -151,71 +161,52 @@ public class CancionComprar extends Stage {
                 }
             }
         });
-        tableViewCanciones.getColumns().add(tableColumnAcciones);
 
+        // Agregar las columnas a la tabla
+        tableViewCanciones.getColumns().addAll(tableColumnNombre, tableColumnPrecio, tableColumnGenero, tableColumnId, tableColumnImagen, tableColumnAcciones);
 
-        tableViewCanciones.getColumns().addAll(tableColumnNombre, tableColumnPrecio, tableColumnGenero, tableColumnId, tableColumnImagen);
-
-
+        // Configurar items
         tableViewCanciones.setItems(cancionDAO.SELECTALL());
-
     }
+
 
     private void ejecutarCompra(CancionDAO cancion) {
         try {
-            // Crear una instancia de VentaDAO
             VentaDAO ventaDAO = new VentaDAO();
+            ventaDAO.setId_cancion(cancion.getId_cancion());
+            ventaDAO.setId_usuario(this.id_usuario);
 
-            // Asignar valores para la venta
-            ventaDAO.setId_cancion(cancion.getId_cancion());  // ID de la canción
-            ventaDAO.setId_usuario(this.id_usuario);  // ID del usuario que está comprando
-
-            // Insertar la venta
-            int rowCountVenta = ventaDAO.INSERT();  // Inserta la venta
-
+            int rowCountVenta = ventaDAO.INSERT();
             if (rowCountVenta > 0) {
-                // Si la venta fue exitosa, insertamos el detalle de venta
                 Venta_DetalleDAO ventaDetalleDAO = new Venta_DetalleDAO();
-                ventaDetalleDAO.setId_venta(ventaDAO.getId_venta());  // Usamos el ID de la venta insertada
-                ventaDetalleDAO.setMonto(cancion.getCosto_cancion());  // Usamos el costo de la canción
-                ventaDetalleDAO.setFecha(new java.util.Date());  // Usamos la fecha actual
+                ventaDetalleDAO.setId_venta(ventaDAO.getId_venta());
+                ventaDetalleDAO.setMonto(cancion.getCosto_cancion());
+                ventaDetalleDAO.setFecha(new java.util.Date());
 
-                // Insertar detalle de venta
                 int rowCountDetalle = ventaDetalleDAO.INSERT();
                 if (rowCountDetalle > 0) {
-                    // Si el detalle también fue insertado correctamente
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Compra Exitosa");
                     alert.setHeaderText("La compra se realizó exitosamente");
                     alert.setContentText("La canción ha sido comprada.");
                     alert.showAndWait();
                 } else {
-                    // Si hubo un error al insertar el detalle
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error en la compra");
-                    alert.setHeaderText("Error al insertar el detalle de la venta");
-                    alert.setContentText("Por favor, intente nuevamente.");
-                    alert.showAndWait();
+                    mostrarError("Error al insertar el detalle de la venta");
                 }
             } else {
-                // Si hubo un error al insertar la venta
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error en la compra");
-                alert.setHeaderText("Error al realizar la venta");
-                alert.setContentText("Por favor, intente nuevamente.");
-                alert.showAndWait();
+                mostrarError("Error al realizar la venta");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // Manejar cualquier excepción
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error en la compra");
-            alert.setHeaderText("Error inesperado");
-            alert.setContentText("Ocurrió un error al realizar la compra.");
-            alert.showAndWait();
+            mostrarError("Ocurrió un error al realizar la compra.");
         }
     }
 
-
-
+    private void mostrarError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error en la compra");
+        alert.setHeaderText(mensaje);
+        alert.setContentText("Por favor, intente nuevamente.");
+        alert.showAndWait();
+    }
 }
