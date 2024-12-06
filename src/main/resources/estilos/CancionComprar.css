@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /* formato para las celdas del tableview */
 .table-cell {
     -fx-padding: 0.5em 0.5em 0.1em 0.3em;
@@ -76,3 +77,40 @@
     -fx-border-color: -fx-box-border;
     -fx-border-radius: 4px; /* Bordes redondeados */
 }
+=======
+/* Estilos generales */
+
+.root {
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f5f5f5;
+}
+
+.button {
+    -fx-background-radius: 5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #45a049;
+}
+
+/* Estilos para la tabla */
+.table-view {
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2;
+    -fx-background-color: #f9f9f9;
+}
+
+.column {
+    -fx-text-fill: #333;
+}
+
+.table-cell {
+    -fx-padding: 5px;
+    -fx-font-size: 12px;
+}
+>>>>>>> Stashed changes

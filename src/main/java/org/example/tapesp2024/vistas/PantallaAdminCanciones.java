@@ -18,7 +18,7 @@ import org.example.tapesp2024.models.Conexion;
 public class PantallaAdminCanciones extends Stage {
     Label label_Bienvenida;
     VBox vbox_compra = new VBox(15);
-    Button button_regresar_usuario, button_comprar_cancion, button_comprar_album;
+    Button button_regresar_usuario, button_comprar_cancion, button_comprar_album, button_reporte;
     HBox hbox_compra = new HBox(15);
     HBox hbox_icon = new HBox(15);
     ImageView imageViewCancion, imageViewAlbum;
@@ -38,7 +38,6 @@ public class PantallaAdminCanciones extends Stage {
     private void CrearIU() {
         String nombreUsuario = clienteDAO.SELECTNAME(this.id_usuario).toString() /*!= null ? clienteDAO.getNombre() : "Usuario"*/;
         label_Bienvenida = new Label("Bienvenido de nuevo admin, " + nombreUsuario);
-
 
         button_regresar_usuario = new Button("Regresar al login");
         button_regresar_usuario.setOnAction(event -> mostarPantallaUsuario());
@@ -96,10 +95,14 @@ public class PantallaAdminCanciones extends Stage {
         button_comprar_album = new Button("Añadir álbum");
         button_comprar_album.setOnAction(event -> albumComprar());
 
+        button_reporte = new Button("Reporte");
+        button_reporte.setOnAction(event -> abrirReporte());
+
         label_Bienvenida.getStyleClass().add("title");
         button_regresar_usuario.getStyleClass().add("btn");
         button_comprar_cancion.getStyleClass().add("btn");
         button_comprar_album.getStyleClass().add("btn");
+        button_reporte.getStyleClass().add("btn");
 
         Image image_cancion = new Image(getClass().getResourceAsStream("/images/iconCancion.jpg"));
         if (image_cancion != null) {
@@ -130,7 +133,7 @@ public class PantallaAdminCanciones extends Stage {
         hbox_compra.getChildren().addAll(button_comprar_cancion, button_comprar_album);
 
         vbox_compra.setAlignment(Pos.CENTER);
-        vbox_compra.getChildren().addAll(label_Bienvenida, hbox_icon, hbox_compra, button_regresar_usuario);
+        vbox_compra.getChildren().addAll(label_Bienvenida, hbox_icon, hbox_compra, button_reporte, button_regresar_usuario);
         vbox_compra.getStyleClass().add("card");
     }
 
@@ -147,6 +150,11 @@ public class PantallaAdminCanciones extends Stage {
     private void mostarPantallaUsuario() {
         login_spotify pantalla = new login_spotify(this.id_usuario);
         pantalla.show();
+        this.close();
+    }
+
+    private void abrirReporte() {
+        new ReporteCanciones(id_usuario).show();
         this.close();
     }
 }

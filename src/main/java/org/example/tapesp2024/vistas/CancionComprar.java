@@ -58,7 +58,11 @@ public class CancionComprar extends Stage {
     }
 
     private void SalirPantallaCompra() {
+<<<<<<< Updated upstream
         PantallaCompra pantalla = new PantallaCompra(0); // Lógica de cierre
+=======
+        PantallaCompra pantalla = new PantallaCompra(this.id_usuario);
+>>>>>>> Stashed changes
         pantalla.show();
         this.close();
     }
@@ -140,8 +144,12 @@ public class CancionComprar extends Stage {
                 });
 
                 Button btnCerrar = new Button("Cerrar");
+<<<<<<< Updated upstream
                 btnCerrar.getStyleClass().add("button");
                 btnCerrar.setOnAction(e -> ventanaCompra.close());
+=======
+                btnCerrar.setOnAction(e -> salirPantallaUsuario());
+>>>>>>> Stashed changes
 
                 layout.getChildren().addAll(lblNombre, lblCosto, imagenCancion, btnEjecutarCompra, btnCerrar);
 
@@ -169,6 +177,14 @@ public class CancionComprar extends Stage {
         tableViewCanciones.setItems(cancionDAO.SELECTALL());
     }
 
+<<<<<<< Updated upstream
+=======
+    private void salirPantallaUsuario() {
+        PantallaUsuario pantallaUsuario = new PantallaUsuario(this.id_usuario);
+        pantallaUsuario.show();
+        this.close();
+    }
+>>>>>>> Stashed changes
 
     private void ejecutarCompra(CancionDAO cancion) {
         try {
@@ -176,7 +192,15 @@ public class CancionComprar extends Stage {
             ventaDAO.setId_cancion(cancion.getId_cancion());
             ventaDAO.setId_usuario(this.id_usuario);
 
+<<<<<<< Updated upstream
             int rowCountVenta = ventaDAO.INSERT();
+=======
+            ventaDAO.setId_cancion(cancion.getId_cancion());
+            ventaDAO.setId_usuario(this.id_usuario);
+
+            int rowCountVenta = ventaDAO.INSERT();
+
+>>>>>>> Stashed changes
             if (rowCountVenta > 0) {
                 Venta_DetalleDAO ventaDetalleDAO = new Venta_DetalleDAO();
                 ventaDetalleDAO.setId_venta(ventaDAO.getId_venta());
@@ -191,6 +215,7 @@ public class CancionComprar extends Stage {
                     alert.setContentText("La canción ha sido comprada.");
                     alert.showAndWait();
                 } else {
+<<<<<<< Updated upstream
                     mostrarError("Error al insertar el detalle de la venta");
                 }
             } else {
@@ -199,6 +224,28 @@ public class CancionComprar extends Stage {
         } catch (Exception e) {
             e.printStackTrace();
             mostrarError("Ocurrió un error al realizar la compra.");
+=======
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error en la compra");
+                    alert.setHeaderText("Error al insertar el detalle de la venta");
+                    alert.setContentText("Por favor, intente nuevamente.");
+                    alert.showAndWait();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error en la compra");
+                alert.setHeaderText("Error al realizar la venta");
+                alert.setContentText("Por favor, intente nuevamente.");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error en la compra");
+            alert.setHeaderText("Error inesperado");
+            alert.setContentText("Ocurrió un error al realizar la compra.");
+            alert.showAndWait();
+>>>>>>> Stashed changes
         }
     }
 

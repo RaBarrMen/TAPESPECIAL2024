@@ -154,6 +154,7 @@ public String SELECTNAME(int id){
             if (rs.next()) {
                 ClienteDAO user = new ClienteDAO();
                 user.setId_usuario(rs.getInt("id_usuario"));
+                user.setNombre(rs.getString("nombre"));
                 user.setUsuario(rs.getString("usuario"));
                 user.setContrasenia(rs.getString("contrasenia"));
                 user.setTelefono(rs.getString("telefono"));
