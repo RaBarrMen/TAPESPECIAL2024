@@ -8,7 +8,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.tapesp2024.models.CancionDAO;
 import org.example.tapesp2024.models.Venta_DetalleDAO;
 import org.example.tapesp2024.models.VentaDAO;
 
@@ -19,7 +18,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import javafx.scene.image.ImageView;
-
 
 import static org.example.tapesp2024.models.Conexion.connection;
 
@@ -33,24 +31,32 @@ public class VentanaHistorial extends Stage {
 
     public VentanaHistorial(int id_usuario) {
         this.id_usuario = id_usuario;
-        CrearUI();
+        CrearUI(); // Llamar a CrearUI para inicializar la UI antes de configurar la escena
         this.setTitle("Historial de Compras");
         this.setScene(escena);
         this.show();
     }
 
     private void CrearUI() {
+        // Inicializar los elementos de la interfaz
         tableViewHistorial = new TableView<>();
-        CrearTabla();
+        CrearTabla(); // Crear la tabla con las columnas
 
+        // Crear el botón de cerrar
         btnCerrar = new Button("Cerrar");
         btnCerrar.setOnAction(actionEvent -> regresarPantallaUsuario());
 
+        // Crear un VBox y agregar los componentes
         vbox = new VBox(tableViewHistorial, btnCerrar);
         vbox.setSpacing(10);
         vbox.setPadding(new Insets(10));
 
+        // Configurar la escena después de agregar todos los elementos
         escena = new Scene(vbox, 600, 400);
+        escena.getStylesheets().add(getClass().getResource("/estilos/VentanaHistorial.css").toExternalForm()); // Asegúrate de que la ruta al archivo CSS sea correcta
+
+        btnCerrar.getStyleClass().add("btn");
+        btnCerrar.getStyleClass().add("btn:hover");
     }
 
     private void regresarPantallaUsuario() {
@@ -92,10 +98,10 @@ public class VentanaHistorial extends Stage {
 
         tableViewHistorial.getColumns().addAll(tableColumnNombre, tableColumnPrecio, tableColumnFecha, tableColumnImagen);
 
+        // Poblar la tabla con los datos
         List<Venta_DetalleDAO> ventasDetalles = obtenerHistorialDeCompras();
         tableViewHistorial.getItems().setAll(ventasDetalles);
     }
-
 
     private List<Venta_DetalleDAO> obtenerHistorialDeCompras() {
         VentaDAO ventaDAO = new VentaDAO();
@@ -129,5 +135,4 @@ public class VentanaHistorial extends Stage {
         }
         return null;
     }
-
 }
