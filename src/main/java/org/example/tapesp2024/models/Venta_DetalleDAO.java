@@ -54,4 +54,9 @@ public class Venta_DetalleDAO {
         }
         return row_count;
     }
+
+    public void setFecha_compra(Date fecha_compra) {
+        this.fecha = fecha_compra;
+    }
+
 }

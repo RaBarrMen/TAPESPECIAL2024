@@ -1,8 +1,12 @@
 package org.example.tapesp2024.models;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.example.tapesp2024.models.Conexion.connection;
 
@@ -55,4 +59,31 @@ public class VentaDAO {
         return row_count;
     }
 
+    public List<Venta_DetalleDAO> obtenerCancionesPorUsuario(int id_usuario) {
+        List<Venta_DetalleDAO> ventasDetalles = new ArrayList<>();
+        String query = "SELECT c.id_cancion, c.cancion, c.costo_cancion, c.id_genero, vd.fecha " +
+                "FROM venta v " +
+                "JOIN venta_detalle vd ON v.id_venta = vd.id_venta " +
+                "JOIN cancion c ON v.id_cancion = c.id_cancion " +
+                "WHERE v.id_usuario = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, id_usuario);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Venta_DetalleDAO ventaDetalle = new Venta_DetalleDAO();
+                ventaDetalle.setId_venta(rs.getInt("id_cancion"));
+                ventaDetalle.setMonto(rs.getFloat("costo_cancion"));
+                ventaDetalle.setFecha(rs.getDate("fecha"));
+
+                ventasDetalles.add(ventaDetalle);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ventasDetalles;
+    }
 }
+

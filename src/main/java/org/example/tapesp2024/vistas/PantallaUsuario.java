@@ -65,9 +65,6 @@ public class PantallaUsuario extends Stage {
         this.close();
     }
 
-
-    // Métodos para mostrar las distintas pantallas
-
     private void mostrarPantallaCompra() {
         PantallaCompra pantalla_compra = new PantallaCompra(this.id_usuario);
         pantalla_compra.show();
@@ -75,27 +72,16 @@ public class PantallaUsuario extends Stage {
     }
 
     private void mostrarHistorialCompras() {
-        Stage ventanaHistorial = new Stage();
-        Label labelHistorial = new Label("Historial de Compras");
-        // Añadir lista de compras e información detallada de cada una
-        VBox vboxHistorial = new VBox(10, labelHistorial);
-        vboxHistorial.setAlignment(Pos.CENTER);
-        Scene escenaHistorial = new Scene(vboxHistorial, 300, 200);
-        ventanaHistorial.setScene(escenaHistorial);
-        ventanaHistorial.setTitle("Historial de Compras");
+        VentanaHistorial ventanaHistorial = new VentanaHistorial(this.id_usuario);
         ventanaHistorial.show();
+        this.close();
     }
 
     private void mostrarDatosPersonales() {
-        Stage ventanaDatos = new Stage();
-        Label labelDatos = new Label("Datos Personales");
-        // Aquí puedes agregar campos para mostrar la información personal del usuario
-        VBox vboxDatos = new VBox(10, labelDatos);
-        vboxDatos.setAlignment(Pos.CENTER);
-        Scene escenaDatos = new Scene(vboxDatos, 300, 200);
-        ventanaDatos.setScene(escenaDatos);
-        ventanaDatos.setTitle("Datos Personales");
-        ventanaDatos.show();
+        DatosPersonales datosPersonales = new DatosPersonales(this.id_usuario);
+        datosPersonales.show();
+        this.close();
     }
+
 }
 
