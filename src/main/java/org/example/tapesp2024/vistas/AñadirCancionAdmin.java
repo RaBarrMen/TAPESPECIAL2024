@@ -1,6 +1,7 @@
 package org.example.tapesp2024.vistas;
 
 import javafx.collections.ObservableList;
+import org.example.tapesp2024.models.AlbumDAO;
 import org.example.tapesp2024.models.CancionDAO;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -12,19 +13,22 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class AddNewProperties extends Dialog<ButtonType> {
+public class AñadirCancionAdmin extends Dialog<ButtonType> {
     public final TextField titleField = new TextField();
     private final TextField priceField = new TextField();
     private final TextField geenroField = new TextField();
     private byte[] imageBytes = null; // Almacenar la imagen en formato byte[]
     private final ComboBox<GeneroDAO> generoComboBox = new ComboBox<>();
+    private final ComboBox<AlbumDAO> albumDAOComboBox = new ComboBox<>();
 
 
-    public AddNewProperties() {
-        setTitle("Añadir nueva propiedad");
-        setHeaderText("Ingresa los detalles para la propiedad");
+
+    public AñadirCancionAdmin() {
+        setTitle("Añadir nueva cancion");
+        setHeaderText("Ingresa los detalles para la cancion");
         initializeDialogPane();
         cargarGeneros();
+        cargarAlbums();
     }
 
     private void cargarGeneros() {
@@ -49,6 +53,28 @@ public class AddNewProperties extends Dialog<ButtonType> {
         });
     }
 
+    private void cargarAlbums() {
+        AlbumDAO albumDAO = new AlbumDAO();
+        ObservableList<AlbumDAO> album = albumDAO.obtenerAlbumesConCanciones();
+        albumDAOComboBox.setItems(album);
+
+        albumDAOComboBox.setCellFactory(param -> new ListCell<AlbumDAO>() {
+            @Override
+            protected void updateItem(AlbumDAO item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getAlbum());
+            }
+        });
+
+        albumDAOComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(AlbumDAO item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getAlbum());
+            }
+        });
+    }
+
 
     private void initializeDialogPane() {
         GridPane gridPane = new GridPane();
@@ -67,11 +93,15 @@ public class AddNewProperties extends Dialog<ButtonType> {
         gridPane.add(new Label("Género:"), 0, 2);
         gridPane.add(generoComboBox, 1, 2);
 
+        gridPane.add(new Label("Album:"), 0, 3);
+        gridPane.add(albumDAOComboBox, 1, 3);
+
+
         // Botón para seleccionar una imagen
-        gridPane.add(new Label("Imagen de la canción:"), 0, 3);
+        gridPane.add(new Label("Imagen de la canción:"), 0, 4);
         Button selectImageButton = new Button("Seleccionar imagen");
         selectImageButton.setOnAction(event -> openImageFileChooser());
-        gridPane.add(selectImageButton, 1, 3);
+        gridPane.add(selectImageButton, 1, 4);
 
         // Establecer el contenido en el panel de diálogo
         getDialogPane().setContent(gridPane);
@@ -141,6 +171,8 @@ public class AddNewProperties extends Dialog<ButtonType> {
         try {
             float costoCancion = Float.parseFloat(priceField.getText());
             GeneroDAO generoSeleccionado = generoComboBox.getValue();
+            AlbumDAO albumSeleccionado = albumDAOComboBox.getValue();
+
 
             if (generoSeleccionado == null) {
                 throw new IllegalArgumentException("Debes seleccionar un género.");
@@ -151,7 +183,8 @@ public class AddNewProperties extends Dialog<ButtonType> {
                     titleField.getText().trim(), // Título de la canción
                     costoCancion,               // Costo
                     generoSeleccionado.getId_genero(), // ID del género seleccionado
-                    imageBytes                  // Imagen
+                    imageBytes,                  // Imagen
+                    albumSeleccionado.getId_album()
             );
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

@@ -81,7 +81,9 @@ public class PantallaCompra extends Stage {
 
 
     private void albumComprar() {
-
+        PantallaAlbum album = new PantallaAlbum(this.id_usuario);
+        album.show();
+        this.close();
     }
 
     private void cancionComprar() {

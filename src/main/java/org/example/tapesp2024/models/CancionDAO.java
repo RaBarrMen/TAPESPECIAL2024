@@ -14,6 +14,8 @@ public class CancionDAO {
     private int id_genero;
     private byte[] imagen_cancion;
 
+    private int id_album;
+
 
     public CancionDAO(int id_cancion, String cancion, float costo_cancion, int id_genero, byte[] imagen_cancion) {
         this.id_cancion = id_cancion;
@@ -21,6 +23,24 @@ public class CancionDAO {
         this.costo_cancion = costo_cancion;
         this.id_genero = id_genero;
         this.imagen_cancion = imagen_cancion;
+    }
+
+    public CancionDAO(int id_cancion, String cancion, float costo_cancion, int id_genero, byte[] imagen_cancion, int id_album) {
+        this.id_cancion = id_cancion;
+        this.cancion = cancion;
+        this.costo_cancion = costo_cancion;
+        this.id_genero = id_genero;
+        this.imagen_cancion = imagen_cancion;
+        this.id_album = id_album;
+    }
+
+
+    public int getId_album() {
+        return id_album;
+    }
+
+    public void setId_album(int id_album) {
+        this.id_album = id_album;
     }
 
     public int getId_cancion() {
@@ -106,5 +126,27 @@ public class CancionDAO {
         return list_cancion;
     }
 
+    public void INSERT_ALBUM() {
+        String query = "INSERT INTO cancion_album(id_cancion, id_album) VALUES(?, ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            // Asignar los valores de los parámetros
+            pstmt.setInt(1, this.id_cancion); // Asignar el valor de "id_cancion"
+            pstmt.setInt(2, this.id_album);  // Asignar el valor de "id_album"
+
+            // Ejecutar la consulta
+            System.out.println(this.id_cancion);
+            int rowsAffected = pstmt.executeUpdate();
+
+            // Verificar si la inserción fue exitosa
+            if (rowsAffected > 0) {
+                System.out.println("Inserción exitosa: " + rowsAffected + " fila(s) afectada(s).");
+            } else {
+                System.out.println("No se insertaron filas.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

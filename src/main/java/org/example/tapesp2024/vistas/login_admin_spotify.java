@@ -43,9 +43,9 @@ public class login_admin_spotify extends Stage {
         text_password = new PasswordField();
         text_password.setPromptText("Contraseña");
         btn_login = new Button("Iniciar Sesión");
-        btn_login.setOnAction(event -> openMenuView(this.id_usuario));
+        btn_login.setOnAction(event -> openMenuView());
         btn_regresar_login = new Button("Regresar al \nlogin");
-        btn_regresar_login.setOnAction(event -> openLoginNormal(this.id_usuario));
+        btn_regresar_login.setOnAction(event -> openLoginNormal());
         label_message = new Label();
         label_message.setTextFill(Color.RED);
 
@@ -73,17 +73,19 @@ public class login_admin_spotify extends Stage {
         this.close();
     }
 
-    private void openLoginNormal(int id_usuario){
+    private void openLoginNormal(){
         login_spotify login = new login_spotify(this.id_usuario);
         login.show();
         this.close();
     }
 
-    private void openMenuView(int id_usuario) {
+    private void openMenuView() {
         String username = text_user.getText();
         String password = text_password.getText();
 
         if (clienteDAO.validateUser(username, password)) {
+            int userId = clienteDAO.getUserID(text_user.getText());
+            this.id_usuario = userId;
             if (clienteDAO.isAdmin(username, password)) {
                 abrirPantallaAdmin(this.id_usuario); // Usuario con rol de administrador
                 Stage stage = (Stage) text_user.getScene().getWindow();

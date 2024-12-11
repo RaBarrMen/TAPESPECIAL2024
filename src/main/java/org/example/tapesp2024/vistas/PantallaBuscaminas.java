@@ -122,7 +122,7 @@ public class PantallaBuscaminas extends Stage {
 
     private void manejarClickIzquierdo(int x, int y) {
         if (juegoTerminado || botones[x][y].getText().equals("🚩")) {
-            return; // Evitar acción en juego terminado o casilla con bandera
+            return;
         }
 
         if (primerClick) {

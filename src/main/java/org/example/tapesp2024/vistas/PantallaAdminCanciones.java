@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.tapesp2024.models.CancionDAO;
+import org.example.tapesp2024.models.Cancion_albumDAO;
 import org.example.tapesp2024.models.ClienteDAO;
 import org.example.tapesp2024.models.Conexion;
 
@@ -44,14 +45,14 @@ public class PantallaAdminCanciones extends Stage {
 
         button_comprar_cancion = new Button("Añadir canción");
         button_comprar_cancion.setOnAction(event -> {
-            AddNewProperties addNewPropertiesDialog = new AddNewProperties();
-            addNewPropertiesDialog.showAndWait().ifPresent(response -> {
+            AñadirCancionAdmin añadirCancionAdminDialog = new AñadirCancionAdmin();
+            añadirCancionAdminDialog.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    CancionDAO cancion = addNewPropertiesDialog.getCancion();
-
+                    CancionDAO cancion = añadirCancionAdminDialog.getCancion();
                     if (cancion != null) {
                         if (Conexion.connection == null) {
                             Conexion.crearConnection();
+
                         }
 
                         try {
@@ -62,6 +63,7 @@ public class PantallaAdminCanciones extends Stage {
                                 alert.setTitle("Canción agregada");
                                 alert.setHeaderText("Canción agregada con éxito");
                                 alert.setContentText("Título: " + cancion.getCancion());
+                                cancion.INSERT_ALBUM();
                                 alert.showAndWait();
                             } else {
                                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -138,7 +140,9 @@ public class PantallaAdminCanciones extends Stage {
     }
 
     private void albumComprar() {
-
+        PantallaAdminAlbum album = new PantallaAdminAlbum(this.id_usuario);
+        album.show();
+        this.close();
     }
 
     private void cancionComprar() {
