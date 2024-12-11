@@ -84,23 +84,23 @@ public class CancionDAO {
     }
 
     public int INSERT(Connection connection) {
-        int row_count;
-        String query = "INSERT INTO cancion(cancion, costo_cancion, id_genero, imagen_cancion) VALUES(?, ?, ?, ?)";
+        int row_count = 0;
+        String query = "INSERT INTO cancion(cancion, costo_cancion, id_genero, imagen_cancion) VALUES('"+this.cancion+"','"+this.costo_cancion+"','"+this.id_genero+"','"+this.imagen_cancion+"')";
 
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            // Asignar los valores de los parámetros
-            pstmt.setString(1, this.cancion); // Asignar el valor de "cancion"
-            pstmt.setFloat(2, this.costo_cancion); // Asignar el valor de "costo_cancion"
-            pstmt.setInt(3, this.id_genero); // Asignar el valor de "id_genero"
-            pstmt.setBytes(4, this.imagen_cancion); // Asignar el valor de "imagen_cancion" como byte[]
+        try {
+            Statement state = connection.createStatement();
+            row_count = state.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);  // Obtener el id generado
 
-            // Ejecutar la consulta y obtener el número de filas afectadas
-            row_count = pstmt.executeUpdate();
+            // Obtener el id_venta generado
+            if (row_count > 0) {
+                ResultSet rs = state.getGeneratedKeys();
+                if (rs.next()) {
+                    this.id_cancion = rs.getInt(1);  // Asignar el id_venta generado
+                }
+            }
         } catch (Exception e) {
-            row_count = 0;
             e.printStackTrace();
         }
-
         return row_count;
     }
 
@@ -144,7 +144,8 @@ public class CancionDAO {
             } else {
                 System.out.println("No se insertaron filas.");
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -52,18 +52,19 @@ public class PantallaAdminCanciones extends Stage {
                     if (cancion != null) {
                         if (Conexion.connection == null) {
                             Conexion.crearConnection();
-
                         }
 
                         try {
                             int rowsAffected = cancion.INSERT(Conexion.connection);
                             boolean success = rowsAffected > 0;
                             if (success) {
+                                // Llamar al método INSERT_ALBUM después de que la canción fue agregada correctamente
+                                cancion.INSERT_ALBUM();
+
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Canción agregada");
                                 alert.setHeaderText("Canción agregada con éxito");
                                 alert.setContentText("Título: " + cancion.getCancion());
-                                cancion.INSERT_ALBUM();
                                 alert.showAndWait();
                             } else {
                                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -92,6 +93,7 @@ public class PantallaAdminCanciones extends Stage {
                 this.close();
             });
         });
+
 
 
         button_comprar_album = new Button("Añadir álbum");
@@ -158,7 +160,8 @@ public class PantallaAdminCanciones extends Stage {
     }
 
     private void abrirReporte() {
-        new ReporteCanciones(id_usuario).show();
+        GraficasVentas graficasVentas = new GraficasVentas(this.id_usuario);
+        graficasVentas.show();
         this.close();
     }
 }
