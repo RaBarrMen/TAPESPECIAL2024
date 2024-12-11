@@ -1,4 +1,4 @@
-package org.example.tapesp2024.utils;
+/*package org.example.tapesp2024.utils;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -6,6 +6,8 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Text;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
@@ -13,7 +15,6 @@ import javafx.scene.image.WritableImage;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 
 public class PDFGenerator {
@@ -40,10 +41,12 @@ public class PDFGenerator {
             barImage.setAutoScale(true);
 
             // Agregar imágenes al PDF
-            document.add(new com.itextpdf.layout.element.Paragraph("Gráfica de Canciones Más Vendidas").setBold());
+            Text boldText1 = new Text("Gráfica de Canciones Más Vendidas").setBold();
+            document.add(new Paragraph(boldText1));
             document.add(pieImage);
 
-            document.add(new com.itextpdf.layout.element.Paragraph("Gráfica de Álbumes Más Vendidos").setBold());
+            Text boldText2 = new Text("Gráfica de Álbumes Más Vendidos").setBold();
+            document.add(new Paragraph(boldText2));
             document.add(barImage);
 
             // Cerrar el documento
@@ -62,3 +65,4 @@ public class PDFGenerator {
         return outputStream.toByteArray();
     }
 }
+*/

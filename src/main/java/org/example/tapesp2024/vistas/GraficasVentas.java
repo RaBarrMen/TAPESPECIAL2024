@@ -30,15 +30,12 @@ public class GraficasVentas extends Stage {
     }
 
     private void CrearIU() {
-        // Crear gráficas
         PieChart pieChartCanciones = crearPieChartCanciones();
         BarChart<String, Number> barChartAlbumes = crearBarChartAlbumes();
 
-        // Botón para salir
         btnSalir = new Button("Regresar");
         btnSalir.setOnAction(event -> regresarPantallaAdmin());
 
-        // Configurar layout principal
         vboxGraficas = new VBox(10, pieChartCanciones, barChartAlbumes, btnSalir);
         vboxGraficas.setAlignment(Pos.CENTER);
     }
@@ -83,8 +80,7 @@ public class GraficasVentas extends Stage {
     }
 
     private void regresarPantallaAdmin() {
-        // Lógica para regresar a la pantalla principal de administrador
-        PantallaAdminCanciones pantallaAdmin = new PantallaAdminCanciones(0); // Reemplaza con el ID de usuario si aplica
+        PantallaAdminCanciones pantallaAdmin = new PantallaAdminCanciones(this.id_usuario);
         pantallaAdmin.show();
         this.close();
     }
