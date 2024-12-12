@@ -31,29 +31,25 @@ public class VentanaHistorial extends Stage {
 
     public VentanaHistorial(int id_usuario) {
         this.id_usuario = id_usuario;
-        CrearUI(); // Llamar a CrearUI para inicializar la UI antes de configurar la escena
+        CrearUI();
         this.setTitle("Historial de Compras");
         this.setScene(escena);
         this.show();
     }
 
     private void CrearUI() {
-        // Inicializar los elementos de la interfaz
         tableViewHistorial = new TableView<>();
-        CrearTabla(); // Crear la tabla con las columnas
+        CrearTabla();
 
-        // Crear el botón de cerrar
         btnCerrar = new Button("Cerrar");
         btnCerrar.setOnAction(actionEvent -> regresarPantallaUsuario());
 
-        // Crear un VBox y agregar los componentes
         vbox = new VBox(tableViewHistorial, btnCerrar);
         vbox.setSpacing(10);
         vbox.setPadding(new Insets(10));
 
-        // Configurar la escena después de agregar todos los elementos
         escena = new Scene(vbox, 600, 400);
-        escena.getStylesheets().add(getClass().getResource("/estilos/VentanaHistorial.css").toExternalForm()); // Asegúrate de que la ruta al archivo CSS sea correcta
+        escena.getStylesheets().add(getClass().getResource("/estilos/VentanaHistorial.css").toExternalForm());
 
         btnCerrar.getStyleClass().add("btn");
         btnCerrar.getStyleClass().add("btn:hover");
@@ -66,7 +62,6 @@ public class VentanaHistorial extends Stage {
     }
 
     private void CrearTabla() {
-        // Crear las columnas de la tabla
         TableColumn<Venta_DetalleDAO, String> tableColumnNombre = new TableColumn<>("Canción");
         tableColumnNombre.setCellValueFactory(data -> {
             int idCancion = data.getValue().getId_venta();

@@ -12,17 +12,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.tapesp2024.models.CancionDAO;
-import org.example.tapesp2024.models.Cancion_albumDAO;
 import org.example.tapesp2024.models.ClienteDAO;
 import org.example.tapesp2024.models.Conexion;
+
+import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 
 public class PantallaAdminCanciones extends Stage {
     Label label_Bienvenida;
     VBox vbox_compra = new VBox(15);
-    Button button_regresar_usuario, button_comprar_cancion, button_comprar_album, button_reporte;
+    Button button_regresar_usuario, button_comprar_cancion, button_comprar_album, buton_modificar_genero, button_reporte;
     HBox hbox_compra = new HBox(15);
     HBox hbox_icon = new HBox(15);
-    ImageView imageViewCancion, imageViewAlbum;
+    ImageView imageViewCancion, imageViewAlbum, imageViewGenero;
     ClienteDAO clienteDAO = new ClienteDAO();
     int id_usuario;
 
@@ -30,7 +32,7 @@ public class PantallaAdminCanciones extends Stage {
         this.id_usuario = id_usuario;
         CrearIU();
         this.setTitle("Pantalla de Administrador");
-        Scene escena = new Scene(vbox_compra, 400, 500);
+        Scene escena = new Scene(vbox_compra, 900, 500);
         escena.getStylesheets().add(getClass().getResource("/estilos/PantallaAdminCanciones.css").toExternalForm());
         this.setScene(escena);
         this.show();
@@ -45,22 +47,23 @@ public class PantallaAdminCanciones extends Stage {
 
         button_comprar_cancion = new Button("Añadir canción");
         button_comprar_cancion.setOnAction(event -> {
-            AñadirCancionAdmin añadirCancionAdminDialog = new AñadirCancionAdmin();
-            añadirCancionAdminDialog.showAndWait().ifPresent(response -> {
+            AddNewSong addNewSongDialog = new AddNewSong();
+            addNewSongDialog.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    CancionDAO cancion = añadirCancionAdminDialog.getCancion();
+                    CancionDAO cancion = addNewSongDialog.getCancion();
                     if (cancion != null) {
                         if (Conexion.connection == null) {
                             Conexion.crearConnection();
                         }
 
                         try {
-                            int rowsAffected = cancion.INSERT(Conexion.connection);
+                            cancion.setImagen_cancion(addNewSongDialog.imageBytes);
+                            System.out.println(Arrays.toString(addNewSongDialog.imageBytes));
+                            int rowsAffected = cancion.INSERT();
                             boolean success = rowsAffected > 0;
+                            System.out.println(Arrays.toString(cancion.getImagen_cancion()));
                             if (success) {
-                                // Llamar al método INSERT_ALBUM después de que la canción fue agregada correctamente
                                 cancion.INSERT_ALBUM();
-
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("Canción agregada");
                                 alert.setHeaderText("Canción agregada con éxito");
@@ -87,10 +90,6 @@ public class PantallaAdminCanciones extends Stage {
                         alert.showAndWait();
                     }
                 }
-
-                // Volver a la pantalla de administrador
-                new PantallaAdminCanciones(this.id_usuario).show();
-                this.close();
             });
         });
 
@@ -98,6 +97,9 @@ public class PantallaAdminCanciones extends Stage {
 
         button_comprar_album = new Button("Añadir álbum");
         button_comprar_album.setOnAction(event -> albumComprar());
+
+        buton_modificar_genero = new Button("Modificar genero");
+        buton_modificar_genero.setOnAction(event -> generoModificar());
 
         button_reporte = new Button("Reporte");
         button_reporte.setOnAction(event -> abrirReporte());
@@ -107,6 +109,8 @@ public class PantallaAdminCanciones extends Stage {
         button_comprar_cancion.getStyleClass().add("btn");
         button_comprar_album.getStyleClass().add("btn");
         button_reporte.getStyleClass().add("btn");
+        buton_modificar_genero.getStyleClass().add("btn");
+
 
         Image image_cancion = new Image(getClass().getResourceAsStream("/images/iconCancion.jpg"));
         if (image_cancion != null) {
@@ -128,17 +132,35 @@ public class PantallaAdminCanciones extends Stage {
             System.out.println("Error: Imagen 'albumCancion.png' no encontrada.");
         }
 
+        Image image_genero = new Image(getClass().getResourceAsStream("/images/genero.jpeg"));
+        if (image_genero != null) {
+            imageViewGenero = new ImageView(image_genero);
+            imageViewGenero.setFitWidth(150);
+            imageViewGenero.setFitHeight(150);
+            imageViewGenero.getStyleClass().add("imagenes");
+        } else {
+            System.out.println("Error: Imagen 'albumCancion.png' no encontrada.");
+        }
+
+
         hbox_icon.setAlignment(Pos.CENTER);
         if (imageViewCancion != null && imageViewAlbum != null) {
-            hbox_icon.getChildren().addAll(imageViewCancion, imageViewAlbum);
+            hbox_icon.getChildren().addAll(imageViewCancion, imageViewAlbum, imageViewGenero);
         }
 
         hbox_compra.setAlignment(Pos.CENTER);
-        hbox_compra.getChildren().addAll(button_comprar_cancion, button_comprar_album);
+        hbox_compra.getChildren().addAll(button_comprar_cancion, button_comprar_album, buton_modificar_genero);
 
         vbox_compra.setAlignment(Pos.CENTER);
         vbox_compra.getChildren().addAll(label_Bienvenida, hbox_icon, hbox_compra, button_reporte, button_regresar_usuario);
         vbox_compra.getStyleClass().add("card");
+    }
+
+    private void generoModificar() {
+        PantallaAdminGenero genero = new PantallaAdminGenero(this.id_usuario);
+        genero.show();
+        this.close();
+
     }
 
     private void albumComprar() {

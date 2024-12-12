@@ -8,9 +8,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.tapesp2024.models.AlbumDAO;
+import org.example.tapesp2024.models.GeneroDAO;
 
-public class PantallaAdminAlbum extends Stage {
+public class PantallaAdminGenero extends Stage {
     TextField txtNombre = new TextField();
     TextField txtCosto = new TextField();
     Label lblNombre = new Label();
@@ -18,13 +18,13 @@ public class PantallaAdminAlbum extends Stage {
     Button btnGuardar = new Button();
     Button btnSalir = new Button();
     VBox vbox_album = new VBox();
-    AlbumDAO album;
+    GeneroDAO genero;
     int id_usuario;
-    TableView tableViewAlbum = new TableView();
-    AlbumDAO albumSeleccionado = new AlbumDAO();
+    TableView tableViewGenero = new TableView();
+    GeneroDAO generoSeleccionado = new GeneroDAO();
     Button btnActualizar;
 
-    public PantallaAdminAlbum(int id_usuario) {
+    public PantallaAdminGenero(int id_usuario) {
         this.id_usuario = id_usuario;
         CrearIU();
         this.setTitle("Pantalla de Administrador");
@@ -36,27 +36,22 @@ public class PantallaAdminAlbum extends Stage {
 
     private void CrearIU() {
         CrearTabla();
-        lblNombre = new Label("Nombre: ");
+        lblNombre = new Label("Genero: ");
         txtNombre = new TextField();
 
-        lblCosto = new Label("Costo: ");
-        txtCosto = new TextField();
 
         btnActualizar = new Button("Actualizar");
         btnActualizar.setVisible(false);
         btnActualizar.setOnAction(e -> {
-                    if (albumSeleccionado != null) {
-                        btnGuardar.setVisible(true);
-                        albumSeleccionado.setAlbum(txtNombre.getText());
-                        albumSeleccionado.setCosto_album(Float.parseFloat(txtCosto.getText()));
-                        btnActualizar.setVisible(false);
-                        albumSeleccionado.UPDATE();
-                        tableViewAlbum.setItems(albumSeleccionado.obtenerAlbumesConCanciones());
-                        txtNombre.setText("");
-                        txtCosto.setText("");
+                        if (generoSeleccionado != null) {
+                            btnGuardar.setVisible(true);
+                            generoSeleccionado.setGenero(txtNombre.getText());
+                            btnActualizar.setVisible(false);
+                            generoSeleccionado.UPDATE();
+                            tableViewGenero.setItems(generoSeleccionado.SELECTALL());
+                            txtNombre.setText("");
+                        }
                     }
-                }
-
         );
 
         btnGuardar = new Button("Guardar");
@@ -66,15 +61,14 @@ public class PantallaAdminAlbum extends Stage {
         btnSalir.setOnAction(event -> regresarPantallaAdmin());
 
         vbox_album.setAlignment(Pos.CENTER);
-        vbox_album.getChildren().addAll(tableViewAlbum, lblNombre, txtNombre, lblCosto, txtCosto, btnGuardar, btnSalir, btnActualizar);
+        vbox_album.getChildren().addAll(tableViewGenero, lblNombre, txtNombre, btnGuardar, btnSalir, btnActualizar);
     }
 
     private void guardarAlbum() {
-        album = new AlbumDAO();
-        album.setAlbum(txtNombre.getText());
-        album.setCosto_album(Double.parseDouble(txtCosto.getText()));
-        album.INSERT();
-        tableViewAlbum.setItems(album.obtenerAlbumesConCanciones());
+        genero = new GeneroDAO();
+        genero.setGenero(txtNombre.getText());
+        genero.INSERT();
+        tableViewGenero.setItems(genero.SELECTALL());
         txtNombre.setText("");
         txtCosto.setText("");
     }
@@ -86,22 +80,19 @@ public class PantallaAdminAlbum extends Stage {
     }
 
     private void CrearTabla() {
-        AlbumDAO albumDAO = new AlbumDAO();
+        GeneroDAO albumDAO = new GeneroDAO();
 
-        TableColumn<AlbumDAO, String> tableColumnNombre = new TableColumn<>("Album");
-        tableColumnNombre.setCellValueFactory(new PropertyValueFactory<>("album"));
+        TableColumn<GeneroDAO, String> tableColumnNombre = new TableColumn<>("Album");
+        tableColumnNombre.setCellValueFactory(new PropertyValueFactory<>("genero"));
 
-        TableColumn<AlbumDAO, Float> tableColumnPrecio = new TableColumn<>("Costo");
-        tableColumnPrecio.setCellValueFactory(new PropertyValueFactory<>("costo_album"));
-
-        TableColumn<AlbumDAO, Void> tableColumnAccionesEliminar = new TableColumn<>("Acciones");
+        TableColumn<GeneroDAO, Void> tableColumnAccionesEliminar = new TableColumn<>("Acciones");
         tableColumnAccionesEliminar.setCellFactory(tc -> new TableCell<>() {
             private final Button btnComprar = new Button("Eliminar");
 
             {
                 btnComprar.getStyleClass().add("button");
                 btnComprar.setOnAction(e -> {
-                    AlbumDAO albumSeleccionado = getTableView().getItems().get(getIndex());
+                    GeneroDAO albumSeleccionado = getTableView().getItems().get(getIndex());
                     if (albumSeleccionado != null) {
                         eliminarAlbum(albumSeleccionado);
                     }
@@ -119,16 +110,16 @@ public class PantallaAdminAlbum extends Stage {
             }
         });
 
-        TableColumn<AlbumDAO, Void> tableColumnAccionesActualizar = new TableColumn<>("Acciones");
+        TableColumn<GeneroDAO, Void> tableColumnAccionesActualizar = new TableColumn<>("Acciones");
         tableColumnAccionesActualizar.setCellFactory(tc -> new TableCell<>() {
             private final Button actualizar = new Button("Actualizar");
 
             {
                 actualizar.getStyleClass().add("button");
                 actualizar.setOnAction(e -> {
-                    albumSeleccionado = getTableView().getItems().get(getIndex());
-                    if (albumSeleccionado != null) {
-                        actualizarAlbum(albumSeleccionado);
+                    generoSeleccionado = getTableView().getItems().get(getIndex());
+                    if (generoSeleccionado != null) {
+                        actualizarAlbum(generoSeleccionado);
                     }
                 });
             }
@@ -146,23 +137,23 @@ public class PantallaAdminAlbum extends Stage {
         });
 
         // Agregar columnas al TableView
-        tableViewAlbum.getColumns().addAll(tableColumnNombre, tableColumnPrecio, tableColumnAccionesActualizar, tableColumnAccionesEliminar);
+        tableViewGenero.getColumns().addAll(tableColumnNombre, tableColumnAccionesActualizar, tableColumnAccionesEliminar);
 
-        ObservableList<AlbumDAO> observableList = FXCollections.observableArrayList(albumDAO.obtenerAlbumesConCanciones());
+        ObservableList<GeneroDAO> observableList = FXCollections.observableArrayList(albumDAO.SELECTALL());
         // Cargar las canciones del álbum
-        tableViewAlbum.setItems(observableList);
+        tableViewGenero.setItems(observableList);
     }
 
-    private void actualizarAlbum(AlbumDAO albumSeleccionado) {
-        txtNombre.setText(albumSeleccionado.getAlbum());
-        txtCosto.setText(String.valueOf(albumSeleccionado.getCosto_album()));
+    private void actualizarAlbum(GeneroDAO albumSeleccionado) {
+        txtNombre.setText(albumSeleccionado.getGenero());
         btnActualizar.setVisible(true);
         btnGuardar.setVisible(false);
     }
 
-    private void eliminarAlbum(AlbumDAO albumSeleccionado) {
+    private void eliminarAlbum(GeneroDAO albumSeleccionado) {
         albumSeleccionado.DELETE();
-        tableViewAlbum.setItems(albumSeleccionado.obtenerAlbumesConCanciones());
+        tableViewGenero.setItems(albumSeleccionado.SELECTALL());
     }
 
 }
+

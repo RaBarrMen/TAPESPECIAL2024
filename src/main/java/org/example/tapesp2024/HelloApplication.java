@@ -2,22 +2,16 @@ package org.example.tapesp2024;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.example.tapesp2024.components.CorredorThread;
-import org.example.tapesp2024.models.CancionDAO;
+
 import org.example.tapesp2024.models.Conexion;
 import org.example.tapesp2024.vistas.*;
 
-import javax.swing.text.TabableView;
-import javax.swing.text.TableView;
 import java.io.IOException;
 
 /* checar brach: git branch

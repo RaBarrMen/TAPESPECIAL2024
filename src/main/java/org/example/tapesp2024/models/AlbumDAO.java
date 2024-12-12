@@ -130,5 +130,35 @@ public class AlbumDAO {
         }
     }
 
+    public int DELETE() {
+        int row_count = 0;
+        String query = "DELETE FROM album WHERE id_album = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, this.id_album);
+            row_count = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return row_count;
+    }
+
+    public int UPDATE() {
+        int row_count = 0;
+        String query = "UPDATE album SET album = ?, costo_album = ? WHERE id_album = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, this.album);
+            stmt.setDouble(2, this.costo_album);
+            stmt.setInt(3, this.id_album);
+            row_count = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return row_count;
+    }
+
 }
 

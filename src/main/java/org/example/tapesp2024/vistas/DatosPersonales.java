@@ -1,9 +1,10 @@
 package org.example.tapesp2024.vistas;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.example.tapesp2024.models.ClienteDAO;
 
@@ -14,47 +15,50 @@ public class DatosPersonales extends Stage {
 
     public DatosPersonales(int id_usuario) {
         this.id_usuario = id_usuario;
-        CrearUI();  // Llamada para crear la UI
+        crearUI();
         this.setTitle("Datos Personales");
         this.show();
     }
 
-    private void CrearUI() {
-        // Crear un VBox para los elementos de la interfaz
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(10));
+    private void crearUI() {
+        VBox vbox = new VBox(15);
+        vbox.setPadding(new Insets(20));
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setStyle("-fx-background-color: #2a2b38;");
 
-        // Crear las etiquetas de información
-        Label lblNombre = new Label("Nombre: ");
-        Label lblTelefono = new Label("Teléfono: ");
-        Label lblUsuario = new Label("Usuario: ");
+        Label lblTitulo = new Label("Datos Personales");
+        lblTitulo.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #f5f5f5; -fx-font-family: Constantia;");
 
-        // Obtener los datos del usuario
+        Label lblNombre = new Label();
+        Label lblTelefono = new Label();
+        Label lblUsuario = new Label();
+
+        lblNombre.setStyle("-fx-text-fill: #f5f5f5; -fx-font-size: 14px;");
+        lblTelefono.setStyle("-fx-text-fill: #f5f5f5; -fx-font-size: 14px;");
+        lblUsuario.setStyle("-fx-text-fill: #f5f5f5; -fx-font-size: 14px;");
+
         Optional<ClienteDAO> clienteOpt = obtenerDatosUsuario(id_usuario);
         if (clienteOpt.isPresent()) {
             ClienteDAO cliente = clienteOpt.get();
-
-            // Actualizar las etiquetas con los valores del usuario
             lblNombre.setText("Nombre: " + cliente.getNombre());
             lblTelefono.setText("Teléfono: " + cliente.getTelefono());
             lblUsuario.setText("Usuario: " + cliente.getUsuario());
         } else {
-            // En caso de que no se encuentren los datos
             lblNombre.setText("Nombre: No disponible");
             lblTelefono.setText("Teléfono: No disponible");
             lblUsuario.setText("Usuario: No disponible");
         }
 
-        // Crear el botón de cierre
         Button btnCerrar = new Button("Cerrar");
+        btnCerrar.setStyle("-fx-background-color: #ffeba7; -fx-text-fill: #5e6681; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10px 20px; -fx-border-radius: 5px;");
+        btnCerrar.setOnMouseEntered(e -> btnCerrar.setStyle("-fx-background-color: #5e6681; -fx-text-fill: #ffeba7; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10px 20px; -fx-border-radius: 5px;"));
+        btnCerrar.setOnMouseExited(e -> btnCerrar.setStyle("-fx-background-color: #ffeba7; -fx-text-fill: #5e6681; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10px 20px; -fx-border-radius: 5px;"));
         btnCerrar.setOnAction(actionEvent -> salirPantallaUsuario());
 
-        // Agregar las etiquetas y el botón al VBox
-        vbox.getChildren().addAll(lblNombre, lblTelefono, lblUsuario, btnCerrar);
+        vbox.getChildren().addAll(lblTitulo, lblNombre, lblTelefono, lblUsuario, btnCerrar);
 
-        // Crear la escena y asignarla a la ventana
-        Scene escena = new Scene(vbox, 400, 250);
-        this.setScene(escena);  // Establecer la escena
+        Scene escena = new Scene(vbox, 400, 300);
+        this.setScene(escena);
     }
 
     private void salirPantallaUsuario() {

@@ -13,7 +13,4 @@ module org.example.tapesp2024 {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires mysql.connector.j;
-    requires kernel;
-    requires layout;
-    requires io;
 }

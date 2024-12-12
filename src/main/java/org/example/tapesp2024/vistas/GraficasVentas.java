@@ -32,49 +32,37 @@ public class GraficasVentas extends Stage {
     private void CrearIU() {
         PieChart pieChartCanciones = crearPieChartCanciones();
         BarChart<String, Number> barChartAlbumes = crearBarChartAlbumes();
-
         btnSalir = new Button("Regresar");
         btnSalir.setOnAction(event -> regresarPantallaAdmin());
-
         vboxGraficas = new VBox(10, pieChartCanciones, barChartAlbumes, btnSalir);
         vboxGraficas.setAlignment(Pos.CENTER);
     }
 
     private PieChart crearPieChartCanciones() {
         Map<String, Integer> cancionesMasVendidas = ventasDAO.obtenerCancionesMasVendidasMes();
-
         PieChart pieChart = new PieChart();
         pieChart.setTitle("Canciones Más Vendidas");
-
         cancionesMasVendidas.forEach((cancion, ventas) -> {
             PieChart.Data slice = new PieChart.Data(cancion, ventas);
             pieChart.getData().add(slice);
         });
-
         return pieChart;
     }
 
     private BarChart<String, Number> crearBarChartAlbumes() {
         Map<String, Integer> albumesMasVendidos = ventasDAO.obtenerAlbumesMasVendidosMes();
-
-        // Ejes del gráfico
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Álbumes");
-
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Ventas");
-
         BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
         barChart.setTitle("Álbumes Más Vendidos");
 
-        // Serie de datos
         XYChart.Series<String, Number> dataSeries = new XYChart.Series<>();
         dataSeries.setName("Ventas por Álbum");
-
         albumesMasVendidos.forEach((album, ventas) -> {
             dataSeries.getData().add(new XYChart.Data<>(album, ventas));
         });
-
         barChart.getData().add(dataSeries);
         return barChart;
     }

@@ -36,7 +36,7 @@ public class VentasDAO {
                 "JOIN venta_detalle vd ON v.id_venta = vd.id_venta " +
                 "WHERE MONTH(vd.fecha) = MONTH(CURDATE()) AND YEAR(vd.fecha) = YEAR(CURDATE()) " +
                 "GROUP BY a.album " +
-                "ORDER BY total_ventas DESC;";
+                "ORDER BY total_ventas DESC limit 5;";
         Map<String, Integer> albumesMasVendidos = new HashMap<>();
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
@@ -57,7 +57,7 @@ public class VentasDAO {
                 "JOIN venta_detalle vd ON v.id_venta = vd.id_venta " +
                 "WHERE MONTH(vd.fecha) = MONTH(CURDATE()) AND YEAR(vd.fecha) = YEAR(CURDATE()) " +
                 "GROUP BY c.cancion " +
-                "ORDER BY total_ventas DESC;";
+                "ORDER BY total_ventas DESC limit 5;";
         Map<String, Integer> cancionesMasVendidas = new HashMap<>();
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();

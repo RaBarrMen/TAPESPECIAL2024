@@ -3,7 +3,9 @@ package org.example.tapesp2024.models;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import static org.example.tapesp2024.models.Conexion.connection;
@@ -55,6 +57,54 @@ public class GeneroDAO {
         return generos;
     }
 
+    public int UPDATE() {
+        int row_count = 0;
+        String query = "UPDATE genero SET genero = ? WHERE id_genero = ?";
 
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, this.genero);
+            stmt.setInt(2, this.id_genero);
+            row_count = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return row_count;
+    }
+
+    public int DELETE() {
+        int row_count = 0;
+        String query = "DELETE FROM genero WHERE id_genero = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, this.id_genero);
+            row_count = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return row_count;
+    }
+
+    public int INSERT() {
+        int row_count = 0;
+        String query = "INSERT INTO genero (genero) VALUES (?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, this.genero);
+            row_count = stmt.executeUpdate();
+
+            if (row_count > 0) {
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    this.id_genero = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return row_count;
+    }
 
 }

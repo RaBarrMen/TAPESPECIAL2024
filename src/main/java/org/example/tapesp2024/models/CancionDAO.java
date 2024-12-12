@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.Arrays;
 
 import static org.example.tapesp2024.models.Conexion.connection;
 
@@ -13,9 +14,20 @@ public class CancionDAO {
     private float costo_cancion;
     private int id_genero;
     private byte[] imagen_cancion;
-
+    private String nombreGenero;
     private int id_album;
 
+    public CancionDAO() {
+
+    }
+
+    public String getNombreGenero() {
+        return nombreGenero;
+    }
+
+    public void setNombreGenero(String nombreGenero) {
+        this.nombreGenero = nombreGenero;
+    }
 
     public CancionDAO(int id_cancion, String cancion, float costo_cancion, int id_genero, byte[] imagen_cancion) {
         this.id_cancion = id_cancion;
@@ -83,30 +95,37 @@ public class CancionDAO {
         this.imagen_cancion = imagen_cancion;
     }
 
-    public int INSERT(Connection connection) {
+    public int INSERT() {
         int row_count = 0;
-        String query = "INSERT INTO cancion(cancion, costo_cancion, id_genero, imagen_cancion) VALUES('"+this.cancion+"','"+this.costo_cancion+"','"+this.id_genero+"','"+this.imagen_cancion+"')";
+        String query = "INSERT INTO cancion(cancion, costo_cancion, id_genero, imagen_cancion) VALUES(?, ?, ?, ?)";
 
-        try {
-            Statement state = connection.createStatement();
-            row_count = state.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);  // Obtener el id generado
+        try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, this.cancion);
+            pstmt.setFloat(2, this.costo_cancion);
+            pstmt.setInt(3, this.id_genero);
+            pstmt.setBytes(4, this.imagen_cancion); // Aquí se establece la imagen como bytes
 
-            // Obtener el id_venta generado
+            row_count = pstmt.executeUpdate();
+
+            // Obtener el ID generado automáticamente
             if (row_count > 0) {
-                ResultSet rs = state.getGeneratedKeys();
+                ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) {
-                    this.id_cancion = rs.getInt(1);  // Asignar el id_venta generado
+                    this.id_cancion = rs.getInt(1);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return row_count;
     }
 
+
     public ObservableList<CancionDAO> SELECTALL() {
         ObservableList<CancionDAO> list_cancion = FXCollections.observableArrayList();
-        String query = "SELECT * FROM cancion";
+        String query = "SELECT c.id_cancion, c.cancion, c.costo_cancion, c.id_genero, c.imagen_cancion, g.genero " +
+                                "FROM cancion c " +
+                                "JOIN genero g ON c.id_genero = g.id_genero";
 
         try (Statement state = connection.createStatement(); ResultSet res = state.executeQuery(query)) {
             while (res.next()) {
@@ -117,6 +136,7 @@ public class CancionDAO {
                         res.getInt("id_genero"),
                         res.getBytes("imagen_cancion")
                 );
+                cancionDao.setNombreGenero(res.getString("genero"));
                 list_cancion.add(cancionDao);
             }
         } catch (SQLException e) {
@@ -149,5 +169,64 @@ public class CancionDAO {
             e.printStackTrace();
         }
     }
+
+    public boolean update(CancionDAO cancion) {
+        String query = "UPDATE cancion SET cancion = ?, costo_cancion = ?, id_genero = ?, imagen_cancion = ? WHERE id_cancion = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, this.cancion);
+            pstmt.setFloat(2, this.costo_cancion);
+            pstmt.setInt(3, this.id_genero);
+            pstmt.setBytes(4, this.imagen_cancion);
+            pstmt.setInt(5, this.id_cancion);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean delete(int id_cancion) {
+        String query = "DELETE FROM cancion WHERE id_cancion = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, id_cancion);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public ObservableList<CancionDAO> SELECTBYALBUM(int id_album) {
+        ObservableList<CancionDAO> canciones = FXCollections.observableArrayList();
+        String query = "SELECT c.id_cancion, c.cancion, c.costo_cancion, c.id_genero, c.imagen_cancion, g.genero " +
+                "FROM cancion c " +
+                "JOIN genero g ON c.id_genero = g.id_genero " +
+                "JOIN cancion_album ca ON c.id_cancion = ca.id_cancion " +
+                "WHERE ca.id_album = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, id_album);
+            try (ResultSet res = pstmt.executeQuery()) {
+                while (res.next()) {
+                    CancionDAO cancion = new CancionDAO(
+                            res.getInt("id_cancion"),
+                            res.getString("cancion"),
+                            res.getFloat("costo_cancion"),
+                            res.getInt("id_genero"),
+                            res.getBytes("imagen_cancion")
+                    );
+                    cancion.setNombreGenero(res.getString("genero")); // Asigna el nombre del género
+                    canciones.add(cancion);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return canciones;
+    }
+
 
 }
